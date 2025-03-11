@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">PinPoint</string>
     <string name="see_all">Tout</string>
+    <string name="loading">loading</string>
+    <string name="placeholder_success">success !</string>
+    <string name="loading_failed">error loading\n</string>
 </resources>

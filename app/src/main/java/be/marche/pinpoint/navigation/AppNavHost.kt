@@ -2,13 +2,16 @@ package be.marche.pinpoint.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import be.marche.pinpoint.ui.mars.MarsScreen
 import be.marche.pinpoint.ui.overview.AccountsScreen
 import be.marche.pinpoint.ui.overview.OverviewScreen
 import be.marche.pinpoint.ui.overview.SingleAccountScreen
+import be.marche.pinpoint.viewModel.MarsViewModel
 
 @Composable
 fun AppNavHost(
@@ -28,6 +31,12 @@ fun AppNavHost(
                 onAccountClick = { accountType ->
                     navController.navigateToSingleAccount(accountType)
                 }
+            )
+        }
+        composable(route = Mars.route) {
+            val marsViewModel: MarsViewModel = viewModel()
+            MarsScreen(
+                marsUiState = marsViewModel.marsUiState,
             )
         }
         composable(route = Accounts.route) {

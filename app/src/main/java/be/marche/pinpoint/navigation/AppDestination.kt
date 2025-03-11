@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -28,6 +29,11 @@ object Overview : AppDestination {
 object Accounts : AppDestination {
     override val icon = Icons.Filled.AccountBox
     override val route = "accounts"
+}
+
+object Mars : AppDestination {
+    override val icon = Icons.Filled.Favorite
+    override val route = "mars"
 }
 
 data object SingleAccount : AppDestination {
