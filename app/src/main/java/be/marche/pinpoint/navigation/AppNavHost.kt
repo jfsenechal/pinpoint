@@ -41,10 +41,7 @@ fun AppNavHost(
             )
         }
         composable(route = Permissions.route) {
-
-            RequiredPermission(
-
-            )
+            RequiredPermission()
         }
         composable(route = Accounts.route) {
             AccountsScreen(

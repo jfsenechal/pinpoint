@@ -13,10 +13,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,12 +40,32 @@ import androidx.compose.ui.unit.dp
 import be.marche.pinpoint.navigation.AppDestination
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTabRow(
     allScreens: List<AppDestination>,
     onTabSelected: (AppDestination) -> Unit,
-    currentScreen: AppDestination
+    currentScreen: AppDestination,
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 ) {
+    TopAppBar(
+        scrollBehavior = scrollBehavior,
+        title = {
+            Text(text = "Coucou")
+        },
+        navigationIcon = {
+            IconButton(onClick = { /* Handle navigation click */ }) {
+                Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Menu")
+            }
+        },
+        actions = {
+            allScreens.forEach { screen ->
+                IconButton(onClick = {  onTabSelected(screen) }) {
+                    Icon(imageVector = screen.icon, contentDescription = screen.name)
+                }
+            }
+        }
+    )
     Surface(
         Modifier
             .height(TabHeight)

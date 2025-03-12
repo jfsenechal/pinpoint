@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.Button
@@ -45,7 +46,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CameraScreen(modifier: Modifier) {
-
+    Text("Click take picture")
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -76,14 +77,14 @@ fun PermissionRationale(state: PermissionState) {
     ) {
         Column(Modifier.padding(vertical = 120.dp, horizontal = 16.dp)) {
             Icon(
-                Icons.Rounded.Share,
+                Icons.Rounded.Build,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground
             )
             Spacer(Modifier.height(8.dp))
             Text("Camera permission required", style = MaterialTheme.typography.bodySmall)
             Spacer(Modifier.height(4.dp))
-            Text("This is required in order for the app to take pictures")
+            Text("This is required in order for the app to take pictures" + state.toString())
         }
         Button(
             modifier = Modifier
@@ -149,7 +150,7 @@ fun OptionalPermissionScreen() {
             }) {
                 Icon(Icons.Rounded.Favorite, contentDescription = null)
             }
-        }) {
-
+        }) { contentPadding ->
+        Text(text = "OptionalPermissionScreen", Modifier.padding(contentPadding))
     }
 }
