@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "be.marche.pinpoint"
-        minSdk = 29
+        minSdk = 30//v11
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -38,6 +38,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -65,4 +66,7 @@ dependencies {
     implementation(libs.okhttp3)
     implementation(libs.retrofit.converter.json)
     implementation(libs.kotlin.serialization.json)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network)
 }

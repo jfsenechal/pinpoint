@@ -36,6 +36,11 @@ object Mars : AppDestination {
     override val route = "mars"
 }
 
+object Permissions : AppDestination {
+    override val icon = Icons.Filled.Call
+    override val route = "permissions"
+}
+
 data object SingleAccount : AppDestination {
     // Added for simplicity, this icon will not in fact be used, as SingleAccount isn't
     // part of the RallyTabRow selection
@@ -52,4 +57,4 @@ data object SingleAccount : AppDestination {
 }
 
 // Screens to be displayed in the top RallyTabRow
-val appTabRowScreens = listOf(Overview, Accounts)
+val appTabRowScreens = listOf(Overview, Accounts, Mars, Permissions)

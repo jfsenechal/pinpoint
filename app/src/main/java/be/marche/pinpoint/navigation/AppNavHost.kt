@@ -7,6 +7,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import be.marche.pinpoint.permission.RequiredPermission
 import be.marche.pinpoint.ui.mars.MarsScreen
 import be.marche.pinpoint.ui.overview.AccountsScreen
 import be.marche.pinpoint.ui.overview.OverviewScreen
@@ -37,6 +38,12 @@ fun AppNavHost(
             val marsViewModel: MarsViewModel = viewModel()
             MarsScreen(
                 marsUiState = marsViewModel.marsUiState,
+            )
+        }
+        composable(route = Permissions.route) {
+
+            RequiredPermission(
+
             )
         }
         composable(route = Accounts.route) {
