@@ -8,11 +8,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import be.marche.pinpoint.permission.RequiredPermission
+import be.marche.pinpoint.ui.components.DrawScreen
 import be.marche.pinpoint.ui.mars.MarsScreen
 import be.marche.pinpoint.ui.overview.AccountsScreen
 import be.marche.pinpoint.ui.overview.OverviewScreen
 import be.marche.pinpoint.ui.overview.SingleAccountScreen
 import be.marche.pinpoint.viewModel.MarsViewModel
+import be.marche.pinpoint.navigation.appTabRowScreens
 
 @Composable
 fun AppNavHost(

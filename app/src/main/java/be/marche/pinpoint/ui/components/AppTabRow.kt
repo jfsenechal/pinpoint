@@ -4,31 +4,38 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -37,7 +44,12 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import be.marche.pinpoint.navigation.AppDestination
+import be.marche.pinpoint.navigation.AppNavHost
+import be.marche.pinpoint.navigation.navigateSingleTopTo
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,21 +58,30 @@ fun AppTabRow(
     allScreens: List<AppDestination>,
     onTabSelected: (AppDestination) -> Unit,
     currentScreen: AppDestination,
+    onOpenDrawer: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 ) {
     TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
         scrollBehavior = scrollBehavior,
         title = {
             Text(text = "Accueil")
         },
         navigationIcon = {
-            IconButton(onClick = { /* Handle navigation click */ }) {
+            IconButton(onClick = {
+
+            }) {
                 Icon(
                     imageVector = Icons.Rounded.Menu,
                     contentDescription = "Menu",
                     modifier = Modifier
                         .padding(start = 16.dp, end = 8.dp)
                         .size(27.dp)
+                        .clickable {
+                            onOpenDrawer()
+                        }
                 )
             }
         },
@@ -72,24 +93,116 @@ fun AppTabRow(
             }
         }
     )
-    Surface(
-        Modifier
-            .height(TabHeight)
-            .fillMaxWidth()
-    ) {
-        Row(Modifier.selectableGroup()) {
-            allScreens.forEach { screen ->
-                RallyTab(
-                    text = screen.route,
-                    icon = screen.icon,
-                    onSelected = { onTabSelected(screen) },
-                    selected = currentScreen == screen
-                )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DrawScreen(
+    allScreens: List<AppDestination>,
+    onTabSelected: (AppDestination) -> Unit,
+    currentScreen: AppDestination,
+    navController: NavHostController,
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+    modifier: Modifier = Modifier
+) {
+    val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                DrawerContent(allScreens, navController, currentScreen)
             }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                //todo replace TopBar to AppTabRow
+                AppTabRow(
+                    allScreens = allScreens,
+                    onTabSelected = { newScreen ->
+                        navController.navigateSingleTopTo(newScreen.route)
+                    },
+                    currentScreen = currentScreen,
+                    onOpenDrawer = {
+                        scope.launch {
+                            drawerState.apply { if (isClosed) open() else close() }
+                        }
+                    })
+            })
+        { innerPadding ->
+            AppNavHost(
+                navController = navController,
+                modifier = Modifier.padding(innerPadding)
+            )
+            ScreenContent(modifier = Modifier.padding(innerPadding))
         }
     }
 }
 
+@Composable
+fun DrawerContent(
+    allScreens: List<AppDestination>,
+    navController: NavHostController,
+    currentScreen: AppDestination,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = "App name",
+        fontSize = 24.sp,
+        modifier = Modifier.padding(16.dp)
+    )
+    HorizontalDivider()
+    allScreens.forEach { screen ->
+        NavigationDrawerItem(
+            icon = {
+                Icon(
+                    imageVector = screen.icon,
+                    contentDescription = screen.name
+                )
+            },
+            label = {
+                Text(
+                    text = screen.name,
+                    fontSize = 17.sp,
+                    modifier = Modifier.padding(16.dp)
+                )
+            },
+            selected = false,
+            onClick = {
+                navController.navigateSingleTopTo(currentScreen.route)
+            }
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+    }
+}
+
+@Composable
+fun ScreenContent(modifier: Modifier = Modifier) {
+
+}
+
+
+/**
+ * Call with
+ * under ligne 61 TopAppBar(
+Surface(
+Modifier
+.height(TabHeight)
+.fillMaxWidth()
+) {
+Row(Modifier.selectableGroup()) {
+allScreens.forEach { screen ->
+RallyTab(
+text = screen.route,
+icon = screen.icon,
+onSelected = { onTabSelected(screen) },
+selected = currentScreen == screen
+)
+}
+}
+}
+ */
 @Composable
 private fun RallyTab(
     text: String,

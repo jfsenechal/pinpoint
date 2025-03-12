@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.rounded.Call
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
@@ -47,6 +48,12 @@ object Permissions : AppDestination {
     override val route = "permissions"
 }
 
+object Draw : AppDestination {
+    override val icon = Icons.Filled.Refresh
+    override val name = "Draw"
+    override val route = "draw"
+}
+
 data object SingleAccount : AppDestination {
     // Added for simplicity, this icon will not in fact be used, as SingleAccount isn't
     // part of the RallyTabRow selection
@@ -64,4 +71,4 @@ data object SingleAccount : AppDestination {
 }
 
 // Screens to be displayed in the top RallyTabRow
-val appTabRowScreens = listOf(Overview, Accounts, Mars, Permissions)
+val appTabRowScreens = listOf(Overview,Draw, Accounts, Mars, Permissions)
