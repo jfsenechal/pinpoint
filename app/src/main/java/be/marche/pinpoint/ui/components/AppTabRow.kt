@@ -10,12 +10,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,16 +51,22 @@ fun AppTabRow(
     TopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
-            Text(text = "Coucou")
+            Text(text = "Accueil")
         },
         navigationIcon = {
             IconButton(onClick = { /* Handle navigation click */ }) {
-                Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Menu")
+                Icon(
+                    imageVector = Icons.Rounded.Menu,
+                    contentDescription = "Menu",
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 8.dp)
+                        .size(27.dp)
+                )
             }
         },
         actions = {
             allScreens.forEach { screen ->
-                IconButton(onClick = {  onTabSelected(screen) }) {
+                IconButton(onClick = { onTabSelected(screen) }) {
                     Icon(imageVector = screen.icon, contentDescription = screen.name)
                 }
             }
