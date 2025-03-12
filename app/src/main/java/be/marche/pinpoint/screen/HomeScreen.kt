@@ -9,7 +9,7 @@ class HomeScreen(val navController: NavController) {
     @Composable
     fun Main() {
         Text(
-            text = "coucou ",
+            text = "Homepage ",
         )
     }
 }
