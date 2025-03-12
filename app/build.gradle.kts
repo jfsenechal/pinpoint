@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.okhttp3)
     implementation(libs.retrofit.converter.json)
+    implementation(libs.retrofit.converter.gson)
     implementation(libs.kotlin.serialization.json)
     implementation(libs.accompanist.permissions)
     implementation(libs.coil.compose)

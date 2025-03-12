@@ -15,7 +15,7 @@ import java.io.IOException
  */
 sealed interface MarsUiState {
     data class Success(val photos: String) : MarsUiState
-    object Error : MarsUiState
+    data class Error(val message: String) : MarsUiState
     object Loading : MarsUiState
 }
 
@@ -44,9 +44,11 @@ class MarsViewModel : ViewModel() {
                     "Success: ${listResult.size} Mars photos retrieved"
                 )
             } catch (e: IOException) {
-                MarsUiState.Error
+                MarsUiState.Error(e.toString())
             } catch (e: HttpException) {
-                MarsUiState.Error
+                MarsUiState.Error(e.toString())
+            } catch (e: Exception) {
+                MarsUiState.Error(e.toString())
             }
         }
     }

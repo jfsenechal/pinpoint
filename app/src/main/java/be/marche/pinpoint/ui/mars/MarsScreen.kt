@@ -32,7 +32,8 @@ fun MarsScreen(
         is MarsUiState.Success -> ResultScreen(
             marsUiState.photos, modifier = modifier.fillMaxWidth()
         )
-        is MarsUiState.Error -> ErrorScreen( modifier = modifier.fillMaxSize())
+
+        is MarsUiState.Error -> ErrorScreen(marsUiState.message, modifier = modifier.fillMaxSize())
     }
 }
 
@@ -52,7 +53,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
  * The home screen displaying error message with re-attempt button.
  */
 @Composable
-fun ErrorScreen(modifier: Modifier = Modifier) {
+fun ErrorScreen(message: String, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
@@ -61,7 +62,10 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(id = R.drawable.ic_connection_error), contentDescription = ""
         )
-        Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
+        Text(
+            text = stringResource(R.string.loading_failed) + message,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
@@ -90,7 +94,7 @@ fun LoadingScreenPreview() {
 @Composable
 fun ErrorScreenPreview() {
     PinPointTheme {
-        ErrorScreen()
+        ErrorScreen("Test error")
     }
 }
 

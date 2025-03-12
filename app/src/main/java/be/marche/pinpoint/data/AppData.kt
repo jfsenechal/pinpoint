@@ -2,8 +2,7 @@ package be.marche.pinpoint.data
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+//import kotlinx.serialization.Serializable
 
 @Immutable
 data class Account(
@@ -16,9 +15,9 @@ data class Account(
 /**
  * This data class defines a Mars photo which includes an ID, and the image URL.
  */
-@Serializable
+//@Serializable
 data class MarsPhoto(
-    val id: String,
-    @SerialName(value = "img_src")
+    val id: Int,
+    val name: String,
     val imgSrc: String
 )

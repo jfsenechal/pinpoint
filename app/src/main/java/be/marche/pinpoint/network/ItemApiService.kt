@@ -1,20 +1,22 @@
 package be.marche.pinpoint.network
 
 import be.marche.pinpoint.data.MarsPhoto
-import kotlinx.serialization.json.Json
+//import kotlinx.serialization.json.Json
 import retrofit2.Retrofit
 import retrofit2.http.GET
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import okhttp3.MediaType.Companion.toMediaType
+//import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+//import okhttp3.MediaType.Companion.toMediaType
+import retrofit2.converter.gson.GsonConverterFactory
 
 private const val BASE_URL =
-    "https://android-kotlin-fun-mars-server.appspot.com"
+    "https://cst.marche.be/"
 
 /**
  * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
  */
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+    .addConverterFactory(GsonConverterFactory.create())
+    //.addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
     .baseUrl(BASE_URL)
     .build()
 
@@ -23,6 +25,8 @@ private val retrofit = Retrofit.Builder()
  */
 interface ItemApiService {
     @GET("photos")
+    suspend fun getPhotos404(): List<MarsPhoto>
+    @GET("api.php")
     suspend fun getPhotos(): List<MarsPhoto>
 }
 
