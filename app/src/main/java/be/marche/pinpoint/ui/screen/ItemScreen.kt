@@ -12,6 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import be.marche.pinpoint.camera.CameraContent
+import be.marche.pinpoint.permission.CameraScreen
 
 @SuppressLint("MissingPermission")
 
@@ -55,6 +57,8 @@ fun ItemNewScreen(
 
 
         Text("Item new")
+
+        CameraContent()
 
     }
 }

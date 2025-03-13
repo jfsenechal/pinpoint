@@ -33,13 +33,13 @@ import java.util.Objects
 import be.marche.pinpoint.BuildConfig
 
 @Composable
-fun AppContent() {
+fun CameraContent() {
 
     val context = LocalContext.current
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
         Objects.requireNonNull(context),
-        BuildConfig.APPLICATION_ID + ".provider", file
+        BuildConfig.APPLICATION_ID + ".fileprovider", file
     )
 
     var capturedImageUri by remember {
