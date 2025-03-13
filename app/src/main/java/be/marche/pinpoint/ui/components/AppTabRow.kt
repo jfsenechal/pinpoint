@@ -55,12 +55,12 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrawScreen(
+    modifier: Modifier = Modifier,
     allScreens: List<AppDestination>,
     onTabSelected: (AppDestination) -> Unit,
     currentScreen: AppDestination,
     navController: NavHostController,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
-    modifier: Modifier = Modifier
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 ) {
     val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -84,12 +84,14 @@ fun DrawScreen(
         Scaffold(
             topBar = {
                 AppTabRow(
+                    modifier = modifier,
                     allScreens = allScreens,
                     onTabSelected = { newScreen ->
                         navController.navigateSingleTopTo(newScreen.route)
                     },
                     currentScreen = currentScreen,
-                    toggleDrawer = toggleDrawer
+                    toggleDrawer = toggleDrawer,
+                    scrollBehavior = scrollBehavior
                 )
             })
         { innerPadding ->
@@ -105,6 +107,7 @@ fun DrawScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTabRow(
+    modifier: Modifier = Modifier,
     allScreens: List<AppDestination>,
     onTabSelected: (AppDestination) -> Unit,
     currentScreen: AppDestination,
@@ -119,6 +122,7 @@ fun AppTabRow(
         title = {
             Text(text = "Accueil")
         },
+        modifier = modifier,
         navigationIcon = {
             IconButton(onClick = {
                 toggleDrawer()

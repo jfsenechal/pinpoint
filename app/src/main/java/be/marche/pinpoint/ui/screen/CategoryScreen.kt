@@ -11,6 +11,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import be.marche.pinpoint.viewModel.MarsViewModel
 
 @Composable
 fun CategoryListScreen(
@@ -18,7 +20,8 @@ fun CategoryListScreen(
     onClickSeeAllBills: () -> Unit = {},
     onAccountClick: (String) -> Unit = {},
 ) {
-
+    val marsViewModel: MarsViewModel = viewModel()
+    val marsUiState = marsViewModel.marsUiState
     val context = LocalContext.current
     Column(
         modifier = Modifier
