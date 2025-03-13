@@ -1,7 +1,6 @@
 package be.marche.pinpoint.permission
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -16,18 +15,22 @@ class PermissionUtil(val context: Context) {
     companion object {
         val listOfPermissions =
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
-                listOf(
+                arrayOf(
                     Manifest.permission.ACCESS_NETWORK_STATE,
                     Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.POST_NOTIFICATIONS,
                     Manifest.permission.CAMERA,
                     Manifest.permission.FOREGROUND_SERVICE,
                     Manifest.permission.NEARBY_WIFI_DEVICES,
                 )
             } else {
-                listOf(
+                arrayOf(
                     Manifest.permission.ACCESS_NETWORK_STATE,
                     Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.CAMERA,
+                    Manifest.permission.FOREGROUND_SERVICE,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                 )
             }
@@ -47,9 +50,11 @@ class PermissionUtil(val context: Context) {
                     revokedPermissionsSize > 1 && i == revokedPermissionsSize - 2 -> {
                         textToShow.append(", et ")
                     }
+
                     i == revokedPermissionsSize - 1 -> {
                         textToShow.append(" ")
                     }
+
                     else -> {
                         textToShow.append(", ")
                     }

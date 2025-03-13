@@ -8,12 +8,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import be.marche.pinpoint.database.DatabaseProvider
+import be.marche.pinpoint.geolocation.LocationManager
 import be.marche.pinpoint.navigation.Accounts
 import be.marche.pinpoint.navigation.appTabRowScreens
 import be.marche.pinpoint.navigation.navigateSingleTopTo
+import be.marche.pinpoint.permission.PermissionUtil
 import be.marche.pinpoint.ui.components.DrawScreen
 import be.marche.pinpoint.ui.theme.PinPointTheme
 import be.marche.pinpoint.viewModel.ItemViewModel
@@ -23,10 +26,13 @@ import be.marche.pinpoint.viewModel.ItemViewModel
  * https://material.io/design/material-studies/rally.html
  */
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
+
+        ActivityCompat.requestPermissions(this, PermissionUtil.listOfPermissions, 100)
 
         // Access the database instance and DAO
         val database = DatabaseProvider.getDatabase(applicationContext)
