@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Objects
 import be.marche.pinpoint.BuildConfig
+
 @Composable
 fun AppContent() {
 

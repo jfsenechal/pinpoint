@@ -12,8 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import be.marche.pinpoint.database.DatabaseProvider
-import be.marche.pinpoint.geolocation.LocationManager
-import be.marche.pinpoint.navigation.Accounts
+import be.marche.pinpoint.navigation.HomePage
 import be.marche.pinpoint.navigation.appTabRowScreens
 import be.marche.pinpoint.navigation.navigateSingleTopTo
 import be.marche.pinpoint.permission.PermissionUtil
@@ -54,7 +53,7 @@ fun StartApp() {
         val currentBackStack by navController.currentBackStackEntryAsState()
         val currentDestination = currentBackStack?.destination
         val currentScreen =
-            appTabRowScreens.find { it.route == currentDestination?.route } ?: Accounts
+            appTabRowScreens.find { it.route == currentDestination?.route } ?: HomePage
 
         DrawScreen(
             allScreens = appTabRowScreens,

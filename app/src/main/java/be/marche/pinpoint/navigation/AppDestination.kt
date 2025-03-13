@@ -1,39 +1,59 @@
 package be.marche.pinpoint.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.rounded.Call
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 
-/**
- * Contract for information needed on every Rally navigation destination
- */
 sealed interface AppDestination {
     val icon: ImageVector
     val name: String
     val route: String
 }
 
-/**
- * Rally app navigation destinations
- */
-object Overview : AppDestination {
-    override val icon = Icons.Rounded.Call
-    override val name = "Overview"
-    override val route = "overview"
+object HomePage : AppDestination {
+    override val icon = Icons.Rounded.Home
+    override val name = "Accueil"
+    override val route = "homepage"
 }
 
-object Accounts : AppDestination {
-    override val icon = Icons.Filled.AccountBox
-    override val name = "Accounts"
-    override val route = "accounts"
+object CategoryList : AppDestination {
+    override val icon = Icons.Rounded.Search
+    override val name = "Liste des catégories"
+    override val route = "category_list"
+}
+
+object CategoryShow : AppDestination {
+    override val icon = Icons.Rounded.Search
+    override val name = "Liste des items des catégories"
+    override val route = "category_show"
+}
+
+object ItemList : AppDestination {
+    override val icon = Icons.Rounded.Star
+    override val name = "Liste des objets"
+    override val route = "item_list"
+}
+
+object ItemNew : AppDestination {
+    override val icon = Icons.Filled.Add
+    override val name = "Nouvel objet"
+    override val route = "item_new"
+}
+
+object ItemShow : AppDestination {
+    override val icon = Icons.Filled.Info
+    override val name = "Détails objet"
+    override val route = "item_show"
 }
 
 object Mars : AppDestination {
@@ -43,15 +63,9 @@ object Mars : AppDestination {
 }
 
 object Permissions : AppDestination {
-    override val icon = Icons.Filled.Call
+    override val icon = Icons.Filled.Lock
     override val name = "Permissions"
     override val route = "permissions"
-}
-
-object Draw : AppDestination {
-    override val icon = Icons.Filled.Refresh
-    override val name = "Draw"
-    override val route = "draw"
 }
 
 data object SingleAccount : AppDestination {
@@ -71,4 +85,4 @@ data object SingleAccount : AppDestination {
 }
 
 // Screens to be displayed in the top RallyTabRow
-val appTabRowScreens = listOf(Overview,Draw, Accounts, Mars, Permissions)
+val appTabRowScreens = listOf(HomePage, CategoryList, ItemList, ItemNew, Mars, Permissions)

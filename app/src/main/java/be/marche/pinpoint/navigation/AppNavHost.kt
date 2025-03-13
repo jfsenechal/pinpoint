@@ -8,13 +8,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import be.marche.pinpoint.permission.RequiredPermission
-import be.marche.pinpoint.ui.components.DrawScreen
 import be.marche.pinpoint.ui.mars.MarsScreen
-import be.marche.pinpoint.ui.overview.AccountsScreen
-import be.marche.pinpoint.ui.overview.OverviewScreen
 import be.marche.pinpoint.ui.overview.SingleAccountScreen
+import be.marche.pinpoint.ui.screen.CategoryListScreen
+import be.marche.pinpoint.ui.screen.CategoryShowScreen
+import be.marche.pinpoint.ui.screen.HomePageScreen
+import be.marche.pinpoint.ui.screen.ItemListScreen
+import be.marche.pinpoint.ui.screen.ItemNewScreen
+import be.marche.pinpoint.ui.screen.ItemShowScreen
 import be.marche.pinpoint.viewModel.MarsViewModel
-import be.marche.pinpoint.navigation.appTabRowScreens
 
 @Composable
 fun AppNavHost(
@@ -23,13 +25,13 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Overview.route,
+        startDestination = HomePage.route,
         modifier = modifier
     ) {
-        composable(route = Overview.route) {
-            OverviewScreen(
+        composable(route = HomePage.route) {
+            HomePageScreen(
                 onClickSeeAllAccounts = {
-                    navController.navigateSingleTopTo(Accounts.route)
+                    navController.navigateSingleTopTo(CategoryList.route)
                 },
                 onAccountClick = { accountType ->
                     navController.navigateToSingleAccount(accountType)
@@ -42,16 +44,51 @@ fun AppNavHost(
                 marsUiState = marsViewModel.marsUiState,
             )
         }
-        composable(route = Permissions.route) {
-            RequiredPermission()
-        }
-        composable(route = Accounts.route) {
-            AccountsScreen(
+
+        composable(route = CategoryList.route) {
+            CategoryListScreen(
                 onAccountClick = { accountType ->
                     navController.navigateToSingleAccount(accountType)
                 }
             )
         }
+
+        composable(route = CategoryShow.route) {
+            CategoryShowScreen(
+                onAccountClick = { accountType ->
+                    navController.navigateToSingleAccount(accountType)
+                }
+            )
+        }
+
+        composable(route = ItemList.route) {
+            ItemListScreen(
+                onAccountClick = { accountType ->
+                    navController.navigateToSingleAccount(accountType)
+                }
+            )
+        }
+
+        composable(route = ItemNew.route) {
+            ItemNewScreen(
+                onAccountClick = { accountType ->
+                    navController.navigateToSingleAccount(accountType)
+                }
+            )
+        }
+
+        composable(route = ItemShow.route) {
+            ItemShowScreen(
+                onAccountClick = { accountType ->
+                    navController.navigateToSingleAccount(accountType)
+                }
+            )
+        }
+
+        composable(route = Permissions.route) {
+            RequiredPermission()
+        }
+
         composable(
             route = SingleAccount.routeWithArgs,
             arguments = SingleAccount.arguments,

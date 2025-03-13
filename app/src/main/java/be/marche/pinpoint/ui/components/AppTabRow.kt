@@ -54,11 +54,61 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+fun DrawScreen(
+    allScreens: List<AppDestination>,
+    onTabSelected: (AppDestination) -> Unit,
+    currentScreen: AppDestination,
+    navController: NavHostController,
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+    modifier: Modifier = Modifier
+) {
+    val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    val toggleDrawer: () -> Unit = {
+        scope.launch {
+            drawerState.apply { if (isClosed) open() else close() }
+        }
+    }
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                DrawerContent(
+                    allScreens, onTabSelected, navController, currentScreen,
+                    toggleDrawer = toggleDrawer
+                )
+            }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                AppTabRow(
+                    allScreens = allScreens,
+                    onTabSelected = { newScreen ->
+                        navController.navigateSingleTopTo(newScreen.route)
+                    },
+                    currentScreen = currentScreen,
+                    toggleDrawer = toggleDrawer
+                )
+            })
+        { innerPadding ->
+            AppNavHost(
+                navController = navController,
+                modifier = Modifier.padding(innerPadding)
+            )
+            ScreenContent(modifier = Modifier.padding(innerPadding))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun AppTabRow(
     allScreens: List<AppDestination>,
     onTabSelected: (AppDestination) -> Unit,
     currentScreen: AppDestination,
-    onOpenDrawer: () -> Unit,
+    toggleDrawer: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 ) {
     TopAppBar(
@@ -71,7 +121,7 @@ fun AppTabRow(
         },
         navigationIcon = {
             IconButton(onClick = {
-
+                toggleDrawer()
             }) {
                 Icon(
                     imageVector = Icons.Rounded.Menu,
@@ -80,7 +130,7 @@ fun AppTabRow(
                         .padding(start = 16.dp, end = 8.dp)
                         .size(27.dp)
                         .clickable {
-                            onOpenDrawer()
+                            toggleDrawer()
                         }
                 )
             }
@@ -95,56 +145,13 @@ fun AppTabRow(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DrawScreen(
-    allScreens: List<AppDestination>,
-    onTabSelected: (AppDestination) -> Unit,
-    currentScreen: AppDestination,
-    navController: NavHostController,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
-    modifier: Modifier = Modifier
-) {
-    val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                DrawerContent(allScreens, navController, currentScreen)
-            }
-        }
-    ) {
-        Scaffold(
-            topBar = {
-                //todo replace TopBar to AppTabRow
-                AppTabRow(
-                    allScreens = allScreens,
-                    onTabSelected = { newScreen ->
-                        navController.navigateSingleTopTo(newScreen.route)
-                    },
-                    currentScreen = currentScreen,
-                    onOpenDrawer = {
-                        scope.launch {
-                            drawerState.apply { if (isClosed) open() else close() }
-                        }
-                    })
-            })
-        { innerPadding ->
-            AppNavHost(
-                navController = navController,
-                modifier = Modifier.padding(innerPadding)
-            )
-            ScreenContent(modifier = Modifier.padding(innerPadding))
-        }
-    }
-}
-
 @Composable
 fun DrawerContent(
     allScreens: List<AppDestination>,
+    onTabSelected: (AppDestination) -> Unit,
     navController: NavHostController,
     currentScreen: AppDestination,
+    toggleDrawer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Text(
@@ -170,7 +177,9 @@ fun DrawerContent(
             },
             selected = false,
             onClick = {
-                navController.navigateSingleTopTo(currentScreen.route)
+                onTabSelected(screen)
+                navController.navigateSingleTopTo(screen.route)
+                toggleDrawer()
             }
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -182,27 +191,6 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 
 }
 
-
-/**
- * Call with
- * under ligne 61 TopAppBar(
-Surface(
-Modifier
-.height(TabHeight)
-.fillMaxWidth()
-) {
-Row(Modifier.selectableGroup()) {
-allScreens.forEach { screen ->
-RallyTab(
-text = screen.route,
-icon = screen.icon,
-onSelected = { onTabSelected(screen) },
-selected = currentScreen == screen
-)
-}
-}
-}
- */
 @Composable
 private fun RallyTab(
     text: String,
