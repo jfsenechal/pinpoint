@@ -24,9 +24,10 @@ fun MarsScreen(
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     when (marsUiState) {
+        is MarsUiState.Pending ->  {}
         is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is MarsUiState.Success -> ResultScreen(
-            marsUiState.photos, modifier = modifier.fillMaxWidth()
+            marsUiState.message, modifier = modifier.fillMaxWidth()
         )
 
         is MarsUiState.Error -> ErrorScreen(marsUiState.message, modifier = modifier.fillMaxSize())

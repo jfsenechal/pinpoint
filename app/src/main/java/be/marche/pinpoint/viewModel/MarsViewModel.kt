@@ -14,8 +14,9 @@ import java.io.IOException
  * UI state for the Home screen
  */
 sealed interface MarsUiState {
-    data class Success(val photos: String) : MarsUiState
+    data class Success(val message: String) : MarsUiState
     data class Error(val message: String) : MarsUiState
+    object Pending : MarsUiState
     object Loading : MarsUiState
 }
 

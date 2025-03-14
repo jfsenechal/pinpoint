@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 
 open class CategoryViewModel(private val categoryDao: CategoryDao) : ViewModel() {
 
-    val categorys: Flow<List<Category>> = categoryDao.getAll()
+    val categories: Flow<List<Category>> = categoryDao.getAllFlow()
     fun addCategory(category: Category) {
         viewModelScope.launch {
             categoryDao.insert(category)
