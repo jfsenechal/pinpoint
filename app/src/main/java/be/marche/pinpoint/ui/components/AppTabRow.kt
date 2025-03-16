@@ -57,6 +57,7 @@ import java.util.Locale
 fun DrawScreen(
     modifier: Modifier = Modifier,
     allScreens: List<AppDestination>,
+    iconsScreens: List<AppDestination>,
     onTabSelected: (AppDestination) -> Unit,
     currentScreen: AppDestination,
     navController: NavHostController,
@@ -85,7 +86,7 @@ fun DrawScreen(
             topBar = {
                 AppTabRow(
                     modifier = modifier,
-                    allScreens = allScreens,
+                    allScreens = iconsScreens,
                     onTabSelected = { newScreen ->
                         navController.navigateSingleTopTo(newScreen.route)
                     },

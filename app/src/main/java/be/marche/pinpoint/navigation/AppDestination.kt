@@ -62,6 +62,12 @@ object Mars : AppDestination {
     override val route = "mars"
 }
 
+object Pickup : AppDestination {
+    override val icon = Icons.Filled.Favorite
+    override val name = "Pickup"
+    override val route = "pickup"
+}
+
 object Permissions : AppDestination {
     override val icon = Icons.Filled.Lock
     override val name = "Permissions"
@@ -85,4 +91,5 @@ data object SingleAccount : AppDestination {
 }
 
 // Screens to be displayed in the top RallyTabRow
-val appTabRowScreens = listOf(HomePage, CategoryList, ItemList, ItemNew, Mars, Permissions)
+val appTabRowScreens = listOf(HomePage, CategoryList, ItemList, ItemNew, Mars, Pickup, Permissions)
+val appIconsScreens = listOf(HomePage, CategoryList, ItemNew)

@@ -1,5 +1,6 @@
 package be.marche.pinpoint.di
 
+import be.marche.pinpoint.camera.CameraViewModel
 import be.marche.pinpoint.database.AppDatabase
 import be.marche.pinpoint.database.DatabaseProvider
 import be.marche.pinpoint.sync.SyncViewModel
@@ -19,6 +20,7 @@ val appModule = module {
 
     // Provide ViewModel
     viewModel { SyncViewModel(get()) }
+    viewModel { CameraViewModel() }
 
     viewModelOf(::SyncViewModel)
 

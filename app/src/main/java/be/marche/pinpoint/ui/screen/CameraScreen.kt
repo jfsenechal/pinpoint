@@ -1,5 +1,10 @@
 package be.marche.pinpoint.ui.screen
 
+import android.net.Uri
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,19 +30,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import be.marche.pinpoint.camera.CameraViewModel
 import be.marche.pinpoint.geolocation.LocationManager
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
+import org.koin.androidx.compose.koinViewModel
 
 private val RallyDefaultPadding = 12.dp
 
 @Composable
 fun PickupMediaScreen(
-    onClickSeeAllAccounts: () -> Unit = {},
-    onClickSeeAllBills: () -> Unit = {},
-    onAccountClick: (String) -> Unit = {},
+
 ) {
 
     val context = LocalContext.current
@@ -45,6 +50,13 @@ fun PickupMediaScreen(
     val locationManager by lazy {
         LocationManager(context)
     }
+
+    val cameraViewModel: CameraViewModel = koinViewModel()
+
+    val pickMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            cameraViewModel.fileUri.value = uri
+        }
 
     Column(
         modifier = Modifier
@@ -56,19 +68,19 @@ fun PickupMediaScreen(
         Spacer(Modifier.height(RallyDefaultPadding))
         Text("Pickup screen")
 
-        DisplayImage()
+        DisplayImage(cameraViewModel)
 
-        BtnsMedia()
+        BtnsMedia(pickMedia)
 
     }
 }
 
 @Composable
-private fun DisplayImage() {
+private fun DisplayImage(cameraViewModel: CameraViewModel) {
 
     val painterStateFlow = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
-            .data("xx")
+            .data(cameraViewModel.fileUri.value)
             .size(Size.ORIGINAL)
             .build()
     )
@@ -97,11 +109,16 @@ private fun DisplayImage() {
 }
 
 @Composable
-private fun BtnsMedia() {
+private fun BtnsMedia(pickMedia: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>) {
     Column(modifier = Modifier.wrapContentWidth()) {
         Button(
             modifier = Modifier.padding(horizontal = 30.dp),
             onClick = {
+                pickMedia.launch(
+                    PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        .build()
+                )
 
             }) {
             Text(text = "Pick image")
