@@ -1,6 +1,7 @@
 package be.marche.pinpoint.network
 
 import be.marche.pinpoint.data.MarsPhoto
+import be.marche.pinpoint.entity.Category
 //import kotlinx.serialization.json.Json
 import retrofit2.Retrofit
 import retrofit2.http.GET
@@ -27,7 +28,7 @@ interface ItemApiService {
     @GET("photos")
     suspend fun getPhotos404(): List<MarsPhoto>
     @GET("api.php")
-    suspend fun getPhotos(): List<MarsPhoto>
+    suspend fun fetchCategories(): List<Category>
 }
 
 /**

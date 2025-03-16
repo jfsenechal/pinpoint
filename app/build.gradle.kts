@@ -42,6 +42,11 @@ android {
     }
 }
 
+// Compile time check
+ksp {
+    arg("KOIN_CONFIG_CHECK","true")
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -71,7 +76,10 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
     implementation(libs.play.services.location)
-    implementation(libs.koin)
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
     implementation(libs.koin.navigation)
     implementation(libs.koin.compose)
+    implementation(libs.koin.annotations)
+    implementation(libs.androidx.ui.media)
 }

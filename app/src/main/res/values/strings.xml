@@ -4,4 +4,7 @@
     <string name="loading">loading</string>
     <string name="placeholder_success">success !</string>
     <string name="loading_failed">error loading\n</string>
+    <string name="dialog_title">Dialog title\n</string>
+    <string name="dialog_text">Dialog text</string>
+    <string name="confirm_btn">confirm btn</string>
 </resources>

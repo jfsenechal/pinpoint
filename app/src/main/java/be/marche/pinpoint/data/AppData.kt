@@ -2,6 +2,8 @@ package be.marche.pinpoint.data
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+import be.marche.pinpoint.entity.Item
+
 //import kotlinx.serialization.Serializable
 
 @Immutable
@@ -20,4 +22,10 @@ data class MarsPhoto(
     val id: Int,
     val name: String,
     val imgSrc: String
+)
+
+data class RemoteNewsResponse(
+    val articles: List<Item>,
+    val status: String,
+    val totalResults: Int
 )

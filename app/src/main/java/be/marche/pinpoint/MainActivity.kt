@@ -1,9 +1,12 @@
 package be.marche.pinpoint
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import be.marche.pinpoint.camera.MediaHelper
 import be.marche.pinpoint.database.DatabaseProvider
 import be.marche.pinpoint.navigation.HomePage
 import be.marche.pinpoint.navigation.appTabRowScreens
@@ -27,11 +31,29 @@ import be.marche.pinpoint.viewModel.ItemViewModel
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge()
-
         ActivityCompat.requestPermissions(this, PermissionUtil.listOfPermissions, 100)
+
+        val mediaPickerHelper = MediaHelper(this) { uri ->
+            uri?.let {
+                println("Selected URI: $it")
+            }
+        }
+
+        val pickMedia = registerForActivityResult(
+            ActivityResultContracts.PickVisualMedia()
+        ) { uri ->
+            if (uri != null) {
+                println(uri.toString())
+            }
+        }
+        pickMedia.launch(
+            PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                .build()
+        )
 
         // Access the database instance and DAO
         val database = DatabaseProvider.getDatabase(applicationContext)
@@ -43,6 +65,7 @@ class MainActivity : ComponentActivity() {
             StartApp()
         }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

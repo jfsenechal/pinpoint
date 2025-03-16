@@ -1,7 +1,7 @@
 package be.marche.pinpoint.di
 
-import androidx.room.Room
 import be.marche.pinpoint.database.AppDatabase
+import be.marche.pinpoint.database.DatabaseProvider
 import be.marche.pinpoint.sync.SyncViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -11,8 +11,7 @@ val appModule = module {
 
     // Provide Database
     single {
-        Room.databaseBuilder(get(), AppDatabase::class.java, "app_database")
-            .build()
+        DatabaseProvider.getDatabase(get())
     }
 
     // Provide DAO

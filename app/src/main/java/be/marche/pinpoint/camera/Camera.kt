@@ -1,4 +1,6 @@
 package be.marche.pinpoint.camera
+import androidx.activity.result.ActivityResultCaller
+import androidx.activity.result.ActivityResultLauncher
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -7,6 +9,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -31,6 +34,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Objects
 import be.marche.pinpoint.BuildConfig
+import androidx.activity.result.PickVisualMediaRequest
 
 @Composable
 fun CameraContent() {

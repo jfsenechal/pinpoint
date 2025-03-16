@@ -6,7 +6,9 @@ import be.marche.pinpoint.database.CategoryDao
 import be.marche.pinpoint.entity.Category
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 open class CategoryViewModel(private val categoryDao: CategoryDao) : ViewModel() {
 
     val categories: Flow<List<Category>> = categoryDao.getAllFlow()

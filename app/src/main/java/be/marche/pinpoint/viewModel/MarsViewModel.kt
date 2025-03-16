@@ -29,20 +29,20 @@ class MarsViewModel : ViewModel() {
      * Call getMarsPhotos() on init so we can display status immediately.
      */
     init {
-        getMarsPhotos()
+        fetchCategories()
     }
 
     /**
      * Gets Mars photos information from the Mars API Retrofit service and updates the
      * [MarsPhoto] [List] [MutableList].
      */
-    fun getMarsPhotos() {
+    fun fetchCategories() {
         viewModelScope.launch {
             marsUiState = MarsUiState.Loading
             marsUiState = try {
-                val listResult = ItemApi.retrofitService.getPhotos()
+                val listResult = ItemApi.retrofitService.fetchCategories()
                 MarsUiState.Success(
-                    "Success: ${listResult.size} Mars photos retrieved"
+                    "Success: ${listResult.size} categories retrieved"
                 )
             } catch (e: IOException) {
                 MarsUiState.Error(e.toString())
