@@ -5,7 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Place
+import androidx.compose.material.icons.rounded.BrowseGallery
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import be.marche.pinpoint.ui.components.IconButtonWithText
@@ -20,7 +20,7 @@ fun ImageFromGalleryContent(fileUri: MutableState<Uri>) {
         }
     IconButtonWithText(
         text = "Prendre une image depuis la gallerie",
-        icon = Icons.Rounded.Place,
+        icon = Icons.Rounded.BrowseGallery,
         onClick = {
             pickMedia.launch(
                 PickVisualMediaRequest.Builder()

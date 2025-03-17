@@ -82,4 +82,5 @@ dependencies {
     implementation(libs.koin.compose)
     implementation(libs.koin.annotations)
     implementation(libs.androidx.ui.media)
+    implementation(libs.androidx.icons.extended)
 }

@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Phone
+import androidx.compose.material.icons.rounded.Camera
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.core.content.ContextCompat
@@ -49,7 +49,7 @@ fun ImageFromCameraContent(context: Context, fileUri: MutableState<Uri>) {
 
     IconButtonWithText(
         text = "Prendre une image depuis la caméra",
-        icon = Icons.Rounded.Phone,
+        icon = Icons.Rounded.Camera,
         onClick = {
             val permissionCheckResult =
                 ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
