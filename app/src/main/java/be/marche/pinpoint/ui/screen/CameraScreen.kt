@@ -1,127 +1,76 @@
 package be.marche.pinpoint.ui.screen
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.activity.compose.ManagedActivityResultLauncher
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
-import be.marche.pinpoint.camera.CameraViewModel
-import be.marche.pinpoint.geolocation.LocationManager
-import coil3.compose.AsyncImagePainter
-import coil3.compose.rememberAsyncImagePainter
-import coil3.request.ImageRequest
-import coil3.size.Size
-import org.koin.androidx.compose.koinViewModel
-
-private val RallyDefaultPadding = 12.dp
+import androidx.compose.runtime.MutableState
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import be.marche.pinpoint.BuildConfig
+import be.marche.pinpoint.ui.components.IconButtonWithText
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Objects
 
 @Composable
-fun PickupMediaScreen(
+fun ImageFromCameraContent(context: Context, fileUri: MutableState<Uri>) {
 
-) {
-
-    val context = LocalContext.current
-
-    val locationManager by lazy {
-        LocationManager(context)
-    }
-
-    val cameraViewModel: CameraViewModel = koinViewModel()
-
-    val pickMedia =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            cameraViewModel.fileUri.value = uri
-        }
-
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-            .semantics { contentDescription = "Overview Screen" }
-    ) {
-
-        Spacer(Modifier.height(RallyDefaultPadding))
-        Text("Pickup screen")
-
-        DisplayImage(cameraViewModel)
-
-        BtnsMedia(pickMedia)
-
-    }
-}
-
-@Composable
-private fun DisplayImage(cameraViewModel: CameraViewModel) {
-
-    val painterStateFlow = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(cameraViewModel.fileUri.value)
-            .size(Size.ORIGINAL)
-            .build()
+    val file = context.createImageFile()
+    val uri = FileProvider.getUriForFile(
+        Objects.requireNonNull(context),
+        BuildConfig.APPLICATION_ID + ".fileprovider", file
     )
 
-    val imageState = painterStateFlow.state.collectAsState()
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success)
+                fileUri.value = uri
+        }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .clip(
-                RoundedCornerShape(20.dp)
-            )
-            .background(MaterialTheme.colorScheme.primaryContainer)
-
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
     ) {
-        if (imageState is AsyncImagePainter.State.Success) {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                painter = painterStateFlow
-            )
+        if (it) {
+            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+            cameraLauncher.launch(uri)
+        } else {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
     }
+
+    IconButtonWithText(
+        text = "Prendre une image depuis la caméra",
+        icon = Icons.Rounded.Phone,
+        onClick = {
+            val permissionCheckResult =
+                ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                cameraLauncher.launch(uri)
+            } else {
+                // Request a permission
+                permissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        })
 }
 
-@Composable
-private fun BtnsMedia(pickMedia: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>) {
-    Column(modifier = Modifier.wrapContentWidth()) {
-        Button(
-            modifier = Modifier.padding(horizontal = 30.dp),
-            onClick = {
-                pickMedia.launch(
-                    PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        .build()
-                )
-
-            }) {
-            Text(text = "Pick image")
-        }
-    }
+@SuppressLint("SimpleDateFormat")
+private fun Context.createImageFile(): File {
+    // Create an image file name
+    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+    val imageFileName = "JPEG_" + timeStamp + "_"
+    val image = File.createTempFile(
+        imageFileName,         /* prefix */
+        ".jpg",          /* suffix */
+        externalCacheDir      /* directory */
+    )
+    return image
 }

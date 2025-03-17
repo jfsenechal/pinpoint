@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.RadioButton
@@ -36,6 +39,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +48,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 //https://github.com/myofficework000/Jetpack-Compose-All-in-one-Guide/blob/master/app/src/main/java/com/example/jetpack_compose_all_in_one/ui/components/Buttons.kt
+
+@Composable
+fun IconButtonWithText(
+    text: String,
+    icon: ImageVector,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = text,
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text, fontSize = 16.sp)
+    }
+}
 
 @Composable
 fun SimpleTextButton(

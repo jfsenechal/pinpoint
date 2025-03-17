@@ -1,4 +1,4 @@
-package be.marche.pinpoint.ui.screen
+package be.marche.pinpoint.ui.category
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable

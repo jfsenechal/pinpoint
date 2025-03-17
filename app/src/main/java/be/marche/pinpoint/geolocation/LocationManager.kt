@@ -23,8 +23,8 @@ class LocationManager(context: Context) {
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     fun getLocation(onSuccess: (latitude: String, longitude: String) -> Unit) {
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            val latitude = location.latitude.toString().takeLast(4)
-            val longitude = location.longitude.toString().takeLast(4)
+            val latitude = location.latitude.toString()
+            val longitude = location.longitude.toString()
             onSuccess(latitude, longitude)
         }
     }

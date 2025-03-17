@@ -10,13 +10,12 @@ import androidx.navigation.compose.composable
 import be.marche.pinpoint.permission.RequiredPermission
 import be.marche.pinpoint.ui.mars.MarsScreen
 import be.marche.pinpoint.ui.overview.SingleAccountScreen
-import be.marche.pinpoint.ui.screen.CategoryListScreen
-import be.marche.pinpoint.ui.screen.CategoryShowScreen
+import be.marche.pinpoint.ui.category.CategoryListScreen
+import be.marche.pinpoint.ui.category.CategoryShowScreen
 import be.marche.pinpoint.ui.screen.HomePageScreen
-import be.marche.pinpoint.ui.screen.ItemListScreen
-import be.marche.pinpoint.ui.screen.ItemNewScreen
-import be.marche.pinpoint.ui.screen.ItemShowScreen
-import be.marche.pinpoint.ui.screen.PickupMediaScreen
+import be.marche.pinpoint.ui.item.ItemListScreen
+import be.marche.pinpoint.ui.item.ItemNewScreen
+import be.marche.pinpoint.ui.item.ItemShowScreen
 import be.marche.pinpoint.viewModel.MarsViewModel
 
 @Composable
@@ -43,12 +42,6 @@ fun AppNavHost(
             val marsViewModel: MarsViewModel = viewModel()
             MarsScreen(
                 marsUiState = marsViewModel.marsUiState,
-            )
-        }
-
-        composable(route = Pickup.route) {
-            PickupMediaScreen(
-
             )
         }
 
