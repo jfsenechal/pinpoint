@@ -1,6 +1,8 @@
 package be.marche.pinpoint.ui.item
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -14,20 +16,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,9 +39,14 @@ import be.marche.pinpoint.item.ItemViewModel
 import be.marche.pinpoint.ui.components.ErrorScreen
 import be.marche.pinpoint.ui.components.LoadingScreen
 import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.size.Size
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import org.koin.androidx.compose.koinViewModel
+import java.io.File
+import androidx.core.net.toUri
 
 private val RallyDefaultPadding = 12.dp
 
@@ -58,24 +64,17 @@ fun ItemListScreen(
     val itemUiState = itemViewModel.itemUiState
     itemViewModel.loadItems()
 
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-            .semantics { contentDescription = "Overview Screen" }
-    ) {
-        when (itemUiState) {
-            is ItemUiState.Pending -> {}
-            is ItemUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-            is ItemUiState.Error -> ErrorScreen(
-                itemUiState.message,
-                modifier = modifier.fillMaxSize()
-            )
+    when (itemUiState) {
+        is ItemUiState.Pending -> {}
+        is ItemUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+        is ItemUiState.Error -> ErrorScreen(
+            itemUiState.message,
+            modifier = modifier.fillMaxSize()
+        )
 
-            is ItemUiState.Success -> ListContent(
-                itemUiState.items, {}, {}
-            )
-        }
+        is ItemUiState.Success -> ListContent(
+            itemUiState.items, {}, {}
+        )
     }
 }
 
@@ -144,7 +143,7 @@ fun ArticleItem(
             .padding(vertical = 16.dp)
     ) {
         Text(
-            text = article.description.toString(),
+            text = article.latitude.toString(),
             fontSize = 22.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -155,7 +154,7 @@ fun ArticleItem(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "article.id",
+            text = article.imageUrl,
             fontSize = 18.sp,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
@@ -164,8 +163,31 @@ fun ArticleItem(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        val painterStateFlow = rememberAsyncImagePainter(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(article.imageUrl.toUri())
+                .size(Size.ORIGINAL)
+                .build()
+        )
+        val imageState = painterStateFlow.state.collectAsState()
+
+        Log.d("ZEZE", imageState.value.toString())
+        Log.d("ZEZE", "Saved Image URL: ${article.imageUrl}")
+        Log.d("ZEZE", "file Image URL: ${File(article.imageUrl)}")
+        Log.d("ZEZE", "uri Image URL: ${Uri.parse(article.imageUrl)}")
+
+        Image(
+            painter = painterStateFlow,
+            contentDescription = article.description,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .background(MaterialTheme.colorScheme.primary.copy(0.3f))
+        )
+
         AsyncImage(
-            model = article.imageUrl,
+            model = article.imageUrl.toUri(),
             contentDescription = article.description,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -177,7 +199,7 @@ fun ArticleItem(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = article.description.toString(),
+            text = article.longitude.toString(),
             fontSize = 17.sp,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,

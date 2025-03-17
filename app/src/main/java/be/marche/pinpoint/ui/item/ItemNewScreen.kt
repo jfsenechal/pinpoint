@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.net.Uri
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -48,7 +48,6 @@ import be.marche.pinpoint.ui.screen.ImageFromGalleryContent
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
-import android.widget.Toast
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -135,7 +134,6 @@ private fun LocationContent(context: Context, location: MutableState<Location?>)
 
 @Composable
 private fun DisplayImage(fileUri: MutableState<Uri>) {
-    Log.d("ZEZE", fileUri.toString())
     val painterStateFlow = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
             .data(fileUri.value)
