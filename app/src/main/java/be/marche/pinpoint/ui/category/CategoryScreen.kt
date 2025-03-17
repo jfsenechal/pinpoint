@@ -167,6 +167,13 @@ fun NewsCard(
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
+                    Text(
+                        text = "id: ${news.id}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontSize = 16.sp,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
             Row(

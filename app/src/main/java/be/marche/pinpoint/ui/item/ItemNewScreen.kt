@@ -3,6 +3,7 @@ package be.marche.pinpoint.ui.item
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -18,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +48,7 @@ import be.marche.pinpoint.ui.screen.ImageFromGalleryContent
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
+import android.widget.Toast
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -81,19 +84,29 @@ fun ItemNewScreen(
     ) {
         Text("Item new")
         Spacer(Modifier.height(RallyDefaultPadding))
-        LocationContent(context)
+        LocationContent(context, itemViewModel.location)
         Spacer(Modifier.height(RallyDefaultPadding))
         DisplayImage(fileUri = itemViewModel.fileUri)
         Spacer(Modifier.height(RallyDefaultPadding))
         ImageFromCameraContent(context, fileUri = itemViewModel.fileUri)
         Spacer(Modifier.height(RallyDefaultPadding))
         ImageFromGalleryContent(fileUri = itemViewModel.fileUri)
+        IconButtonWithText(
+            text = "Ajouter",
+            icon = Icons.Rounded.Add,
+            onClick = {
+                itemViewModel.location.value?.let { loc ->
+                    itemViewModel.addItem(itemViewModel.location.value!!, "")
+                    Toast.makeText(context, "item added", Toast.LENGTH_LONG).show()
+                }
+            })
+        Spacer(Modifier.height(RallyDefaultPadding))
     }
 }
 
 @SuppressLint("MissingPermission")
 @Composable
-private fun LocationContent(context: Context) {
+private fun LocationContent(context: Context, location: MutableState<Location?>) {
 
     val locationManager by lazy {
         LocationManager(context)
@@ -113,8 +126,9 @@ private fun LocationContent(context: Context) {
         text = "Rafraîchir position",
         icon = Icons.Rounded.Place,
         onClick = {
-            locationManager.getLocation { latitude, longitude ->
-                locationText = "Lat: ${latitude} Lng : ${longitude}"
+            locationManager.getLocation { newLocation ->
+                location.value = newLocation
+                locationText = "Lat: ${newLocation.latitude} Lng : ${newLocation.longitude}"
             }
         })
 }

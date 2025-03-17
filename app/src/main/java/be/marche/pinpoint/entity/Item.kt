@@ -12,8 +12,23 @@ import androidx.room.ForeignKey
         )
     ])
 data class Item(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val name: String,
-    val description: String?,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val idServer: Int = 0,
+    var latitude: Double,
+    var longitude: Double,
+    var imageUrl: String,
     val category_id: Int,
+    val description: String? = null,
+    val createdAt: String
+)
+
+@Entity
+data class Comment(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int?,
+    val idServer: Int,
+    val itemId: Int,
+    val content: String,
+    val createdAt: String
 )

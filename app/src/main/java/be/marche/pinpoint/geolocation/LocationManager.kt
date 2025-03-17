@@ -21,12 +21,15 @@ class LocationManager(context: Context) {
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
-    fun getLocation(onSuccess: (latitude: String, longitude: String) -> Unit) {
+    fun getLocation(onSuccess: (location: Location) -> Unit) {
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            val latitude = location.latitude.toString()
-            val longitude = location.longitude.toString()
-            onSuccess(latitude, longitude)
+            onSuccess(location)
         }
+    }
+
+    fun locationEnabled(context: Context): Boolean {
+        //todo
+        return true
     }
 
     fun trackLocation(): Flow<Location> {
