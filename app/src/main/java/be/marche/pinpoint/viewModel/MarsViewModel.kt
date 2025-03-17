@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import be.marche.pinpoint.data.MarsUiState
 import be.marche.pinpoint.network.ItemApi
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -13,13 +14,6 @@ import java.io.IOException
 /**
  * UI state for the Home screen
  */
-sealed interface MarsUiState {
-    data class Success(val message: String) : MarsUiState
-    data class Error(val message: String) : MarsUiState
-    object Pending : MarsUiState
-    object Loading : MarsUiState
-}
-
 class MarsViewModel : ViewModel() {
     /** The mutable State that stores the status of the most recent request */
     var marsUiState: MarsUiState by mutableStateOf(MarsUiState.Loading)

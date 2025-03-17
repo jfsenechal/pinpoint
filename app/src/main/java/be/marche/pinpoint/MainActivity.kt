@@ -26,8 +26,8 @@ import be.marche.pinpoint.ui.theme.PinPointTheme
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
         ActivityCompat.requestPermissions(this, PermissionUtil.listOfPermissions, 100)
 

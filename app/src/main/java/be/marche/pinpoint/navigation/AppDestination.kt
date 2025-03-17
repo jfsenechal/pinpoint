@@ -7,8 +7,9 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.automirrored.rounded.List
+import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -27,19 +28,19 @@ object HomePage : AppDestination {
 }
 
 object CategoryList : AppDestination {
-    override val icon = Icons.Rounded.Search
+    override val icon = Icons.AutoMirrored.Rounded.List
     override val name = "Liste des catégories"
     override val route = "category_list"
 }
 
 object CategoryShow : AppDestination {
     override val icon = Icons.Rounded.Search
-    override val name = "Liste des items des catégories"
+    override val name = "Show category"
     override val route = "category_show"
 }
 
 object ItemList : AppDestination {
-    override val icon = Icons.Rounded.Star
+    override val icon = Icons.Rounded.Folder
     override val name = "Liste des objets"
     override val route = "item_list"
 }
@@ -86,4 +87,4 @@ data object SingleAccount : AppDestination {
 
 // Screens to be displayed in the top RallyTabRow
 val appTabRowScreens = listOf(HomePage, CategoryList, ItemList, ItemNew, Mars, Permissions)
-val appIconsScreens = listOf(HomePage, CategoryList, ItemNew)
+val appIconsScreens = listOf(HomePage, ItemList, ItemNew)

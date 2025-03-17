@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import be.marche.pinpoint.data.MarsUiState
 import be.marche.pinpoint.database.CategoryDao
 import be.marche.pinpoint.entity.Category
 import be.marche.pinpoint.network.ItemApi
-import be.marche.pinpoint.viewModel.MarsUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

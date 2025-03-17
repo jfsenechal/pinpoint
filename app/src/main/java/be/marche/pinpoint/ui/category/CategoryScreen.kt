@@ -34,12 +34,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import be.marche.pinpoint.data.MarsUiState
 import be.marche.pinpoint.entity.Category
 import be.marche.pinpoint.sync.SyncViewModel
 import be.marche.pinpoint.ui.components.ErrorScreen
 import be.marche.pinpoint.ui.components.LoadingScreen
 import be.marche.pinpoint.ui.mars.ResultScreen
-import be.marche.pinpoint.viewModel.MarsUiState
 import be.marche.pinpoint.viewModel.MarsViewModel
 import coil3.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
@@ -72,13 +72,13 @@ fun CategoryListScreen(
         when (marsUiState) {
             is MarsUiState.Pending -> {}
             is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-            is MarsUiState.Success -> ResultScreen(
-                marsUiState.message, modifier = modifier.fillMaxWidth()
-            )
-
             is MarsUiState.Error -> ErrorScreen(
                 marsUiState.message,
                 modifier = modifier.fillMaxSize()
+            )
+
+            is MarsUiState.Success -> ResultScreen(
+                marsUiState.message, modifier = modifier.fillMaxWidth()
             )
         }
         Spacer(Modifier.height(RallyDefaultPadding))

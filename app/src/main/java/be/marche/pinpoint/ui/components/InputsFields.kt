@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -268,7 +269,7 @@ fun AutoCompleteSearchBar(
                     .clickable { onSuggestionClick(i) }
                     .padding(15.dp)
             )
-            if (i < minOf(suggestions.size, maxItems)) Divider()
+            if (i < minOf(suggestions.size, maxItems)) HorizontalDivider(            )
         }
     }
 }

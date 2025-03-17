@@ -12,10 +12,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import be.marche.pinpoint.R
+import be.marche.pinpoint.data.MarsUiState
 import be.marche.pinpoint.ui.components.ErrorScreen
 import be.marche.pinpoint.ui.components.LoadingScreen
 import be.marche.pinpoint.ui.theme.PinPointTheme
-import be.marche.pinpoint.viewModel.MarsUiState
 
 @Composable
 fun MarsScreen(
@@ -24,13 +24,12 @@ fun MarsScreen(
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     when (marsUiState) {
-        is MarsUiState.Pending ->  {}
+        is MarsUiState.Pending -> {}
         is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+        is MarsUiState.Error -> ErrorScreen(marsUiState.message, modifier = modifier.fillMaxSize())
         is MarsUiState.Success -> ResultScreen(
             marsUiState.message, modifier = modifier.fillMaxWidth()
         )
-
-        is MarsUiState.Error -> ErrorScreen(marsUiState.message, modifier = modifier.fillMaxSize())
     }
 }
 

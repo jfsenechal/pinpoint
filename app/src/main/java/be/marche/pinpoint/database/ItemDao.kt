@@ -15,11 +15,14 @@ interface ItemDao {
     suspend fun insert(note: Item)
 
     @Update
-    suspend fun update(note: Item) // TODO implementation
+    suspend fun update(note: Item)
 
     @Delete
     suspend fun delete(note: Item)
 
     @Query("SELECT * FROM Item")
-    fun getAll(): Flow<List<Item>>
+    fun getAllFlow(): Flow<List<Item>>
+
+    @Query("SELECT * FROM Item")
+    fun getAll(): List<Item>
 }
