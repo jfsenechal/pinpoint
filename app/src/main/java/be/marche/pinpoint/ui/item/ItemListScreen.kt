@@ -3,6 +3,7 @@ package be.marche.pinpoint.ui.item
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,13 +19,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import be.marche.pinpoint.data.ItemUiState
 import be.marche.pinpoint.entity.Item
 import be.marche.pinpoint.item.ItemViewModel
@@ -42,11 +39,8 @@ import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import org.koin.androidx.compose.koinViewModel
 import java.io.File
-import androidx.core.net.toUri
 
 private val RallyDefaultPadding = 12.dp
 
@@ -71,7 +65,6 @@ fun ItemListScreen(
             itemUiState.message,
             modifier = modifier.fillMaxSize()
         )
-
         is ItemUiState.Success -> ListContent(
             itemUiState.items, {}, {}
         )
@@ -93,22 +86,6 @@ fun ListContent(
     ) {
         if (itemList.isNotEmpty()) {
             val listState = rememberLazyListState()
-            val shouldPaginate = remember {
-                derivedStateOf {
-                    val totalItems = listState.layoutInfo.totalItemsCount
-                    val lastVisibleIndex = listState.layoutInfo
-                        .visibleItemsInfo.lastOrNull()?.index ?: 0
-                    lastVisibleIndex == totalItems - 1
-                }
-            }
-
-            LaunchedEffect(key1 = listState) {
-                snapshotFlow { shouldPaginate.value }
-                    .distinctUntilChanged()
-                    .filter { it }
-                    .collect { onAction() }
-            }
-
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 8.dp),
@@ -187,7 +164,12 @@ fun ArticleItem(
         )
 
         AsyncImage(
-            model = article.imageUrl.toUri(),
+            model = ImageRequest
+                .Builder(LocalContext.current)
+                .data(article.imageUrl)
+                .size(Size.ORIGINAL)
+                .build(),
+          //  model = article.imageUrl.toUri(),
             contentDescription = article.description,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -217,10 +199,4 @@ fun ArticleItem(
         )
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(20.dp)
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(0.7f))
-    )
 }

@@ -23,7 +23,7 @@ val appModule = module {
     viewModel { SyncViewModel(get()) }
     viewModel { ItemViewModel(get()) }
 
-    viewModelOf(::SyncViewModel)
-    viewModelOf(::ItemViewModel)
+  //  viewModelOf(::SyncViewModel)
+ //   viewModelOf(::ItemViewModel)
 
 }

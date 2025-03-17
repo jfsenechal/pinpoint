@@ -1,11 +1,15 @@
 package be.marche.pinpoint.ui.item
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.net.Uri
+import android.speech.RecognizerIntent
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,12 +21,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -38,6 +47,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import be.marche.pinpoint.geolocation.LocationManager
 import be.marche.pinpoint.geolocation.LocationService
@@ -90,6 +100,59 @@ fun ItemNewScreen(
         ImageFromCameraContent(context, fileUri = itemViewModel.fileUri)
         Spacer(Modifier.height(RallyDefaultPadding))
         ImageFromGalleryContent(fileUri = itemViewModel.fileUri)
+
+        Spacer(Modifier.height(RallyDefaultPadding))
+        var descriptionInput by remember { mutableStateOf("") }
+        //FieldDescription(itemViewModel.description)
+        // Voice Recognition Launcher
+        val speechLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                val spokenText =
+                    data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()
+                spokenText?.let {
+                    descriptionInput = it
+                }
+            }
+        }
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(128.dp)
+                .padding(horizontal = 16.dp),
+            value = descriptionInput,
+            onValueChange = {
+
+            },
+            label = {
+                Text(text = "Description")
+            },
+            maxLines = 12,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            trailingIcon = {
+                IconButton(onClick = {
+                    val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                        putExtra(
+                            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                        )
+                        putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now")
+                    }
+                    speechLauncher.launch(intent)
+                }) {
+                    Icon(
+                        imageVector = androidx.compose.material.icons.Icons.Default.Mic,
+                        contentDescription = "Microphone"
+                    )
+                }
+            }
+        )
+
+        Spacer(Modifier.height(RallyDefaultPadding))
         IconButtonWithText(
             text = "Ajouter",
             icon = Icons.Rounded.Add,
@@ -162,6 +225,11 @@ private fun DisplayImage(fileUri: MutableState<Uri>) {
             painter = painterStateFlow
         )
     }
+}
+
+@Composable
+private fun FieldDescription(descriptionInput: MutableState<String>) {
+
 }
 
 @Composable

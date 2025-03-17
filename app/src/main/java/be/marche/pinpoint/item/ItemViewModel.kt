@@ -21,6 +21,7 @@ import org.koin.android.annotation.KoinViewModel
 open class ItemViewModel(private val itemDao: ItemDao) : ViewModel() {
 
     val fileUri = mutableStateOf<Uri>(Uri.EMPTY)
+    val description = mutableStateOf<String>("")
     val location = mutableStateOf<Location?>(null)
 
     val itemsFlow: Flow<List<Item>> = itemDao.getAllFlow()

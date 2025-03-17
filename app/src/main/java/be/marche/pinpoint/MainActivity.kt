@@ -18,11 +18,8 @@ import be.marche.pinpoint.navigation.navigateSingleTopTo
 import be.marche.pinpoint.permission.PermissionUtil
 import be.marche.pinpoint.ui.components.DrawScreen
 import be.marche.pinpoint.ui.theme.PinPointTheme
+import org.koin.compose.KoinContext
 
-/**
- * This Activity recreates part of the Rally Material Study from
- * https://material.io/design/material-studies/rally.html
- */
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,10 +29,11 @@ class MainActivity : ComponentActivity() {
         ActivityCompat.requestPermissions(this, PermissionUtil.listOfPermissions, 100)
 
         setContent {
-            StartApp()
+            KoinContext {
+                StartApp()
+            }
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
