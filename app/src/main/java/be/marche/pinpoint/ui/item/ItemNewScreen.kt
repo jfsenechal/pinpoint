@@ -49,10 +49,14 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import be.marche.pinpoint.data.MarsUiState
 import be.marche.pinpoint.geolocation.LocationManager
 import be.marche.pinpoint.geolocation.LocationService
+import be.marche.pinpoint.helper.copyImageToInternalStorage
 import be.marche.pinpoint.item.ItemViewModel
+import be.marche.pinpoint.ui.components.ErrorScreen
 import be.marche.pinpoint.ui.components.IconButtonWithText
+import be.marche.pinpoint.ui.components.LoadingScreen
 import be.marche.pinpoint.ui.screen.ImageFromCameraContent
 import be.marche.pinpoint.ui.screen.ImageFromGalleryContent
 import coil3.compose.rememberAsyncImagePainter
@@ -75,9 +79,12 @@ fun ItemNewScreen(
     onClickSeeAllAccounts: () -> Unit = {},
     onClickSeeAllBills: () -> Unit = {},
     onAccountClick: (String) -> Unit = {},
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val itemViewModel: ItemViewModel = koinViewModel()
+
+    val uiState = itemViewModel.uiState
 
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
@@ -110,11 +117,28 @@ fun ItemNewScreen(
             icon = Icons.Rounded.Add,
             onClick = {
                 itemViewModel.location.value?.let { loc ->
-                    itemViewModel.addItem(itemViewModel.location.value!!, "")
-                    Toast.makeText(context, "item added", Toast.LENGTH_LONG).show()
+                    val savedPath = copyImageToInternalStorage(context, itemViewModel.fileUri.value)
+                    itemViewModel.addItem(
+                        itemViewModel.location.value!!,
+                        savedPath,
+                        itemViewModel.description.value
+                    )
                 }
             })
+
         Spacer(Modifier.height(RallyDefaultPadding))
+
+        when (uiState) {
+            is MarsUiState.Pending -> {}
+            is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+            is MarsUiState.Error -> ErrorScreen(
+                uiState.message,
+                modifier = modifier.fillMaxSize()
+            )
+            is MarsUiState.Success -> {
+                Toast.makeText(context, "item added", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }
 

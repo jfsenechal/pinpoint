@@ -16,6 +16,7 @@ import be.marche.pinpoint.ui.screen.HomePageScreen
 import be.marche.pinpoint.ui.item.ItemListScreen
 import be.marche.pinpoint.ui.item.ItemNewScreen
 import be.marche.pinpoint.ui.item.ItemShowScreen
+import be.marche.pinpoint.ui.screen.SyncScreen
 import be.marche.pinpoint.viewModel.MarsViewModel
 
 @Composable
@@ -38,11 +39,9 @@ fun AppNavHost(
                 }
             )
         }
-        composable(route = Mars.route) {
-            val marsViewModel: MarsViewModel = viewModel()
-            MarsScreen(
-                marsUiState = marsViewModel.marsUiState,
-            )
+
+        composable(route = Sync.route) {
+            SyncScreen()
         }
 
         composable(route = CategoryList.route) {

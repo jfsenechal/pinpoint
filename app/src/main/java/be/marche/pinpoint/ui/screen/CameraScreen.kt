@@ -1,7 +1,6 @@
 package be.marche.pinpoint.ui.screen
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -15,10 +14,8 @@ import androidx.compose.runtime.MutableState
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import be.marche.pinpoint.BuildConfig
+import be.marche.pinpoint.helper.createImageFile
 import be.marche.pinpoint.ui.components.IconButtonWithText
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Objects
 
 @Composable
@@ -60,17 +57,4 @@ fun ImageFromCameraContent(context: Context, fileUri: MutableState<Uri>) {
                 permissionLauncher.launch(Manifest.permission.CAMERA)
             }
         })
-}
-
-@SuppressLint("SimpleDateFormat")
-private fun Context.createImageFile(): File {
-    // Create an image file name
-    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-    val imageFileName = "JPEG_" + timeStamp + "_"
-    val image = File.createTempFile(
-        imageFileName,         /* prefix */
-        ".jpg",          /* suffix */
-        externalCacheDir      /* directory */
-    )
-    return image
 }

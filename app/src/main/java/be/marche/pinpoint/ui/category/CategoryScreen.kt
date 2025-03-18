@@ -11,19 +11,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -33,14 +29,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import be.marche.pinpoint.data.MarsUiState
+import be.marche.pinpoint.category.CategoryViewModel
+import be.marche.pinpoint.data.CategoryUiState
 import be.marche.pinpoint.entity.Category
-import be.marche.pinpoint.sync.SyncViewModel
 import be.marche.pinpoint.ui.components.ErrorScreen
 import be.marche.pinpoint.ui.components.LoadingScreen
-import be.marche.pinpoint.ui.mars.ResultScreen
-import be.marche.pinpoint.viewModel.MarsViewModel
 import coil3.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 
@@ -53,11 +46,14 @@ fun CategoryListScreen(
     onAccountClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    val marsViewModel: MarsViewModel = viewModel()
-    val syncViewModel: SyncViewModel = koinViewModel()
-    val marsUiState = marsViewModel.marsUiState
-    val syncState = syncViewModel.syncUiState
-    val categories = syncViewModel.categories
+    val categoryViewModel: CategoryViewModel = koinViewModel()
+    val categoryUiState = categoryViewModel.categoryUiState
+
+    LaunchedEffect(Unit) {
+        categoryViewModel.loadCategories()
+    }
+
+    val categories = categoryViewModel.categories
 
     Column(
         modifier = Modifier
@@ -65,61 +61,25 @@ fun CategoryListScreen(
             .verticalScroll(rememberScrollState())
             .semantics { contentDescription = "Overview Screen" }
     ) {
-
-        Text("Liste catégories internet")
-        Spacer(Modifier.height(RallyDefaultPadding))
-
-        when (marsUiState) {
-            is MarsUiState.Pending -> {}
-            is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-            is MarsUiState.Error -> ErrorScreen(
-                marsUiState.message,
-                modifier = modifier.fillMaxSize()
-            )
-
-            is MarsUiState.Success -> ResultScreen(
-                marsUiState.message, modifier = modifier.fillMaxWidth()
-            )
-        }
-        Spacer(Modifier.height(RallyDefaultPadding))
-
         Text("Liste catégories db")
-
-        when (syncState) {
-            is MarsUiState.Pending -> {}
-            is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-            is MarsUiState.Error -> ErrorScreen(
-                syncState.message,
+        when (categoryUiState) {
+            is CategoryUiState.Pending -> {}
+            is CategoryUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+            is CategoryUiState.Error -> ErrorScreen(
+                categoryUiState.message,
                 modifier = modifier.fillMaxSize()
             )
-            is MarsUiState.Success -> {
+            is CategoryUiState.Success -> {
                 categories.forEach { category ->
-                    NewsCard(category, {})
+                    CategoryCard(category, {})
                 }
             }
         }
-
-        IconButton(onClick = {
-            syncViewModel.sync()
-        }) {
-            Icon(
-                imageVector = Icons.Rounded.Refresh,
-                contentDescription = "Menu",
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 8.dp)
-                    .size(35.dp)
-                    .clickable {
-                        syncViewModel.sync()
-                    }
-            )
-        }
-
     }
 }
 
-
 @Composable
-fun NewsCard(
+fun CategoryCard(
     news: Category,
     onItemClick: () -> Unit
 ) {

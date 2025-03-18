@@ -1,5 +1,6 @@
 package be.marche.pinpoint.data
 
+import be.marche.pinpoint.entity.Category
 import be.marche.pinpoint.entity.Item
 
 sealed class ResultState<T : Any> {
@@ -34,4 +35,11 @@ sealed interface ItemUiState {
     data class Error(val message: String) : ItemUiState
     object Pending : ItemUiState
     object Loading : ItemUiState
+}
+
+sealed interface CategoryUiState {
+    data class Success(val items: List<Category>) : CategoryUiState
+    data class Error(val message: String) : CategoryUiState
+    object Pending : CategoryUiState
+    object Loading : CategoryUiState
 }

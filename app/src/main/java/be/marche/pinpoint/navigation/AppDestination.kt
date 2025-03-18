@@ -8,6 +8,8 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.automirrored.rounded.List
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.rounded.Details
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,13 +36,13 @@ object CategoryList : AppDestination {
 }
 
 object CategoryShow : AppDestination {
-    override val icon = Icons.Rounded.Search
+    override val icon = Icons.Rounded.Details
     override val name = "Show category"
     override val route = "category_show"
 }
 
 object ItemList : AppDestination {
-    override val icon = Icons.Rounded.Folder
+    override val icon = Icons.Rounded.Search
     override val name = "Liste des objets"
     override val route = "item_list"
 }
@@ -57,10 +59,10 @@ object ItemShow : AppDestination {
     override val route = "item_show"
 }
 
-object Mars : AppDestination {
-    override val icon = Icons.Filled.Favorite
-    override val name = "Mars"
-    override val route = "mars"
+object Sync : AppDestination {
+    override val icon = Icons.Filled.Sync
+    override val name = "Synchronisation"
+    override val route = "sync"
 }
 
 object Permissions : AppDestination {
@@ -86,5 +88,5 @@ data object SingleAccount : AppDestination {
 }
 
 // Screens to be displayed in the top RallyTabRow
-val appTabRowScreens = listOf(HomePage, CategoryList, ItemList, ItemNew, Mars, Permissions)
-val appIconsScreens = listOf(HomePage, ItemList, ItemNew)
+val appTabRowScreens = listOf(HomePage, CategoryList, ItemList, ItemNew, Sync, Permissions)
+val appIconsScreens = listOf(HomePage, ItemList, Sync, ItemNew)
