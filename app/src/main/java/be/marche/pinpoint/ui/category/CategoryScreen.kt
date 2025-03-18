@@ -92,13 +92,11 @@ fun CategoryListScreen(
                 syncState.message,
                 modifier = modifier.fillMaxSize()
             )
-            is MarsUiState.Success -> ResultScreen(
-                syncState.message, modifier = modifier.fillMaxWidth()
-            )
-        }
-
-        categories.forEach { category ->
-            NewsCard(category, {})
+            is MarsUiState.Success -> {
+                categories.forEach { category ->
+                    NewsCard(category, {})
+                }
+            }
         }
 
         IconButton(onClick = {

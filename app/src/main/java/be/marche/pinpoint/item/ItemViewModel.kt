@@ -26,7 +26,7 @@ open class ItemViewModel(private val itemDao: ItemDao) : ViewModel() {
 
     val itemsFlow: Flow<List<Item>> = itemDao.getAllFlow()
 
-    var itemUiState: ItemUiState by mutableStateOf(ItemUiState.Loading)
+    var itemUiState: ItemUiState by mutableStateOf(ItemUiState.Pending)
         private set
 
     var items: List<Item> by mutableStateOf(emptyList())
