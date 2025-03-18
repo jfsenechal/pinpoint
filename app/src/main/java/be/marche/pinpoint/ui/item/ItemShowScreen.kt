@@ -14,10 +14,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ItemShowScreen(
-    idItem: String?,
-    onClickSeeAllAccounts: () -> Unit = {},
-    onClickSeeAllBills: () -> Unit = {},
-    onClick: (String) -> Unit = {},
+    idItem: Int?,
+    onClick: (Int) -> Unit = {},
 ) {
 
     val context = LocalContext.current
@@ -27,9 +25,7 @@ fun ItemShowScreen(
             .verticalScroll(rememberScrollState())
             .semantics { contentDescription = "Overview Screen" }
     ) {
-
-
         Text("item show")
-
+        Text("category id $idItem" )
     }
 }

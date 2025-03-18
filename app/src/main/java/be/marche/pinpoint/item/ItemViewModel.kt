@@ -60,7 +60,7 @@ open class ItemViewModel(private val itemDao: ItemDao) : ViewModel() {
                 longitude = location.longitude,
                 imageUrl = filePath,
                 description = description,
-                category_id = 1,
+                category_id = categorySelected.value!!,
                 createdAt = created
             )
 

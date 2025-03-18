@@ -76,16 +76,15 @@ private val RallyDefaultPadding = 12.dp
 
 @Composable
 fun ItemNewScreen(
-    categoryId: String?,
-    onClickSeeAllAccounts: () -> Unit = {},
-    onClickSeeAllBills: () -> Unit = {},
-    onClick: (String) -> Unit = {},
+    categoryId: Int?,
+    onClick: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val itemViewModel: ItemViewModel = koinViewModel()
 
     val uiState = itemViewModel.uiState
+    itemViewModel.categorySelected.value = categoryId
 
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
@@ -99,7 +98,7 @@ fun ItemNewScreen(
             .semantics { contentDescription = "Item new" },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Item new")
+        Text("Item new in category $categoryId")
         Spacer(Modifier.height(RallyDefaultPadding))
         LocationContent(context, itemViewModel.location)
         Spacer(Modifier.height(RallyDefaultPadding))

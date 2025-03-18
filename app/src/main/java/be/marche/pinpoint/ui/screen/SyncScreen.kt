@@ -28,8 +28,6 @@ private val RallyDefaultPadding = 12.dp
 
 @Composable
 fun SyncScreen(
-    onClickSeeAllAccounts: () -> Unit = {},
-    onClickSeeAllBills: () -> Unit = {},
     onClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {

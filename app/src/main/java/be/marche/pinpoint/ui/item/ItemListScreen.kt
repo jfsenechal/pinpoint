@@ -42,9 +42,7 @@ private val RallyDefaultPadding = 12.dp
 
 @Composable
 fun ItemListScreen(
-    onClickSeeAllAccounts: () -> Unit = {},
-    onClickSeeAllBills: () -> Unit = {},
-    onClick: (String) -> Unit = {},
+    onClick: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val itemViewModel: ItemViewModel = koinViewModel()
@@ -54,7 +52,7 @@ fun ItemListScreen(
         itemViewModel.loadItems()
     }
 
-    Text("Liste items ")
+    Text("Liste items " + itemViewModel.items.size)
     Spacer(Modifier.height(RallyDefaultPadding))
 
     when (itemUiState) {
@@ -100,6 +98,9 @@ fun ListContent(
                     )
                 }
             }
+        }
+        else {
+            Text(text = "Liste vide")
         }
     }
 

@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -41,9 +40,7 @@ private val RallyDefaultPadding = 12.dp
 
 @Composable
 fun CategoryListScreen(
-    onClickSeeAllAccounts: () -> Unit = {},
-    onClickSeeAllBills: () -> Unit = {},
-    onClick: (String) -> Unit = {},
+    onClick: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val categoryViewModel: CategoryViewModel = koinViewModel()
@@ -82,14 +79,14 @@ fun CategoryListScreen(
 @Composable
 fun CategoryCard(
     category: Category,
-    onItemClick: (String) -> Unit
+    onItemClick: (Int) -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .height(200.dp)
-            .clickable { onItemClick(category.id.toString()) },
+            .clickable { onItemClick(category.id) },
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(0.5.dp, Color.Gray),
         elevation = CardDefaults.cardElevation(10.dp),
@@ -154,23 +151,5 @@ fun CategoryCard(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun CategoryShowScreen(
-    categoryId: String?,
-    onClickSeeAllAccounts: () -> Unit = {},
-    onClickSeeAllBills: () -> Unit = {},
-    onClick: (String) -> Unit = {},
-) {
-    val context = LocalContext.current
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-            .semantics { contentDescription = "Overview Screen" }
-    ) {
-        Text("Show category" + categoryId)
     }
 }

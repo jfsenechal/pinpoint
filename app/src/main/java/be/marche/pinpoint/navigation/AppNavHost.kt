@@ -27,9 +27,6 @@ fun AppNavHost(
     ) {
         composable(route = HomePage.route) {
             HomePageScreen(
-                onClickSeeAllAccounts = {
-                    navController.navigateSingleTopTo(CategoryList.route)
-                },
                 onClick = { accountType ->
                     navController.navigateToSingleAccount(CategoryList.route, accountType)
                 }
@@ -52,9 +49,9 @@ fun AppNavHost(
             deepLinks = CategoryShow.deepLinks
         ) { navBackStackEntry ->
             val categoryId =
-                navBackStackEntry.arguments?.getString(CategoryShow.categoryTypeArg)
+                navBackStackEntry.arguments?.getInt(CategoryShow.categoryTypeArg)
             CategoryShowScreen(categoryId, onClick = { accountType ->
-                navController.navigateToSingleAccount(CategoryShow.route, accountType)
+                navController.navigateToSingleAccount(ItemNew.route, accountType)
             })
         }
 
@@ -72,7 +69,7 @@ fun AppNavHost(
             deepLinks = ItemNew.deepLinks
         ) { navBackStackEntry ->
             val categoryId =
-                navBackStackEntry.arguments?.getString(ItemNew.categoryTypeArg)
+                navBackStackEntry.arguments?.getInt(ItemNew.categoryTypeArg)
             ItemNewScreen(categoryId, onClick = { accountType ->
                 navController.navigateToSingleAccount(ItemNew.route, accountType)
             })
@@ -84,7 +81,7 @@ fun AppNavHost(
             deepLinks = ItemShow.deepLinks
         ) { navBackStackEntry ->
             val itemId =
-                navBackStackEntry.arguments?.getString(ItemShow.itemTypeArg)
+                navBackStackEntry.arguments?.getInt(ItemShow.itemTypeArg)
             ItemShowScreen(itemId, onClick = { accountType ->
                 navController.navigateToSingleAccount(ItemShow.route, accountType)
             })
@@ -113,6 +110,6 @@ fun NavHostController.navigateSingleTopTo(route: String) =
         restoreState = true
     }
 
-private fun NavHostController.navigateToSingleAccount(route: String, accountType: String) {
+private fun NavHostController.navigateToSingleAccount(route: String, accountType: Int) {
     this.navigateSingleTopTo("${route}/$accountType")
 }

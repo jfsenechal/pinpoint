@@ -39,7 +39,7 @@ object CategoryShow : AppDestination {
     const val categoryTypeArg = "category_id"
     val routeWithArgs = "${route}/{$categoryTypeArg}"
     val arguments = listOf(
-        navArgument(categoryTypeArg) { type = NavType.StringType }
+        navArgument(categoryTypeArg) { type = NavType.IntType }
     )
     val deepLinks = listOf(
         navDeepLink { uriPattern = "rally://${route}/{$categoryTypeArg}" }
@@ -59,7 +59,7 @@ object ItemNew : AppDestination {
     const val categoryTypeArg = "category_id"
     val routeWithArgs = "${route}/{$categoryTypeArg}"
     val arguments = listOf(
-        navArgument(categoryTypeArg) { type = NavType.StringType }
+        navArgument(categoryTypeArg) { type = NavType.IntType }
     )
     val deepLinks = listOf(
         navDeepLink { uriPattern = "rally://${route}/{$categoryTypeArg}" }
@@ -73,7 +73,7 @@ object ItemShow : AppDestination {
     const val itemTypeArg = "item_id"
     val routeWithArgs = "${route}/{$itemTypeArg}"
     val arguments = listOf(
-        navArgument(itemTypeArg) { type = NavType.StringType }
+        navArgument(itemTypeArg) { type = NavType.IntType }
     )
     val deepLinks = listOf(
         navDeepLink { uriPattern = "rally://${route}/{$itemTypeArg}" }
