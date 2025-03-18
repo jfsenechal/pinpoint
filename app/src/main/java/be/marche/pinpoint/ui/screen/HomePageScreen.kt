@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 fun HomePageScreen(
     onClickSeeAllAccounts: () -> Unit = {},
     onClickSeeAllBills: () -> Unit = {},
-    onAccountClick: (String) -> Unit = {},
+    onClick: (String) -> Unit = {},
 ) {
 
     Text(text = "Homepage")

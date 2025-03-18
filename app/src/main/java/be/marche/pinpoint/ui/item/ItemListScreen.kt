@@ -44,7 +44,7 @@ private val RallyDefaultPadding = 12.dp
 fun ItemListScreen(
     onClickSeeAllAccounts: () -> Unit = {},
     onClickSeeAllBills: () -> Unit = {},
-    onAccountClick: (String) -> Unit = {},
+    onClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val itemViewModel: ItemViewModel = koinViewModel()

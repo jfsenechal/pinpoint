@@ -2,22 +2,18 @@ package be.marche.pinpoint.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import be.marche.pinpoint.permission.RequiredPermission
-import be.marche.pinpoint.ui.mars.MarsScreen
-import be.marche.pinpoint.ui.overview.SingleAccountScreen
 import be.marche.pinpoint.ui.category.CategoryListScreen
 import be.marche.pinpoint.ui.category.CategoryShowScreen
-import be.marche.pinpoint.ui.screen.HomePageScreen
 import be.marche.pinpoint.ui.item.ItemListScreen
 import be.marche.pinpoint.ui.item.ItemNewScreen
 import be.marche.pinpoint.ui.item.ItemShowScreen
+import be.marche.pinpoint.ui.screen.HomePageScreen
 import be.marche.pinpoint.ui.screen.SyncScreen
-import be.marche.pinpoint.viewModel.MarsViewModel
 
 @Composable
 fun AppNavHost(
@@ -34,8 +30,8 @@ fun AppNavHost(
                 onClickSeeAllAccounts = {
                     navController.navigateSingleTopTo(CategoryList.route)
                 },
-                onAccountClick = { accountType ->
-                    navController.navigateToSingleAccount(accountType)
+                onClick = { accountType ->
+                    navController.navigateToSingleAccount(CategoryList.route, accountType)
                 }
             )
         }
@@ -45,58 +41,57 @@ fun AppNavHost(
         }
 
         composable(route = CategoryList.route) {
-            //  val syncViewModel: SyncViewModel = viewModel()
-            CategoryListScreen(
-                onAccountClick = { accountType ->
-                    navController.navigateToSingleAccount(accountType)
-                }
-            )
+            CategoryListScreen(onClick = { accountType ->
+                navController.navigateToSingleAccount(CategoryShow.route, accountType)
+            })
         }
 
-        composable(route = CategoryShow.route) {
-            CategoryShowScreen(
-                onAccountClick = { accountType ->
-                    navController.navigateToSingleAccount(accountType)
-                }
-            )
+        composable(
+            route = CategoryShow.routeWithArgs,
+            arguments = CategoryShow.arguments,
+            deepLinks = CategoryShow.deepLinks
+        ) { navBackStackEntry ->
+            val categoryId =
+                navBackStackEntry.arguments?.getString(CategoryShow.categoryTypeArg)
+            CategoryShowScreen(categoryId, onClick = { accountType ->
+                navController.navigateToSingleAccount(CategoryShow.route, accountType)
+            })
         }
 
         composable(route = ItemList.route) {
             ItemListScreen(
-                onAccountClick = { accountType ->
-                    navController.navigateToSingleAccount(accountType)
+                onClick = { accountType ->
+                    navController.navigateToSingleAccount(ItemShow.route, accountType)
                 }
             )
         }
 
-        composable(route = ItemNew.route) {
-            ItemNewScreen(
-                onAccountClick = { accountType ->
-                    navController.navigateToSingleAccount(accountType)
-                }
-            )
+        composable(
+            route = ItemNew.routeWithArgs,
+            arguments = ItemNew.arguments,
+            deepLinks = ItemNew.deepLinks
+        ) { navBackStackEntry ->
+            val categoryId =
+                navBackStackEntry.arguments?.getString(ItemNew.categoryTypeArg)
+            ItemNewScreen(categoryId, onClick = { accountType ->
+                navController.navigateToSingleAccount(ItemNew.route, accountType)
+            })
         }
 
-        composable(route = ItemShow.route) {
-            ItemShowScreen(
-                onAccountClick = { accountType ->
-                    navController.navigateToSingleAccount(accountType)
-                }
-            )
+        composable(
+            route = ItemShow.routeWithArgs,
+            arguments = ItemShow.arguments,
+            deepLinks = ItemShow.deepLinks
+        ) { navBackStackEntry ->
+            val itemId =
+                navBackStackEntry.arguments?.getString(ItemShow.itemTypeArg)
+            ItemShowScreen(itemId, onClick = { accountType ->
+                navController.navigateToSingleAccount(ItemShow.route, accountType)
+            })
         }
 
         composable(route = Permissions.route) {
             RequiredPermission()
-        }
-
-        composable(
-            route = SingleAccount.routeWithArgs,
-            arguments = SingleAccount.arguments,
-            deepLinks = SingleAccount.deepLinks
-        ) { navBackStackEntry ->
-            val accountType =
-                navBackStackEntry.arguments?.getString(SingleAccount.accountTypeArg)
-            SingleAccountScreen(accountType)
         }
     }
 }
@@ -118,6 +113,6 @@ fun NavHostController.navigateSingleTopTo(route: String) =
         restoreState = true
     }
 
-private fun NavHostController.navigateToSingleAccount(accountType: String) {
-    this.navigateSingleTopTo("${SingleAccount.route}/$accountType")
+private fun NavHostController.navigateToSingleAccount(route: String, accountType: String) {
+    this.navigateSingleTopTo("${route}/$accountType")
 }

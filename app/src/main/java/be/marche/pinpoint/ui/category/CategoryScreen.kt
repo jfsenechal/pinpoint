@@ -43,7 +43,7 @@ private val RallyDefaultPadding = 12.dp
 fun CategoryListScreen(
     onClickSeeAllAccounts: () -> Unit = {},
     onClickSeeAllBills: () -> Unit = {},
-    onAccountClick: (String) -> Unit = {},
+    onClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val categoryViewModel: CategoryViewModel = koinViewModel()
@@ -69,9 +69,10 @@ fun CategoryListScreen(
                 categoryUiState.message,
                 modifier = modifier.fillMaxSize()
             )
+
             is CategoryUiState.Success -> {
                 categories.forEach { category ->
-                    CategoryCard(category, {})
+                    CategoryCard(category, onClick)
                 }
             }
         }
@@ -80,15 +81,15 @@ fun CategoryListScreen(
 
 @Composable
 fun CategoryCard(
-    news: Category,
-    onItemClick: () -> Unit
+    category: Category,
+    onItemClick: (String) -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .height(200.dp)
-            .clickable { onItemClick() },
+            .clickable { onItemClick(category.id.toString()) },
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(0.5.dp, Color.Gray),
         elevation = CardDefaults.cardElevation(10.dp),
@@ -100,7 +101,7 @@ fun CategoryCard(
         ) {
             Row(Modifier.padding(2.dp)) {
                 AsyncImage(
-                    model = news.image,
+                    model = category.image,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
@@ -111,21 +112,21 @@ fun CategoryCard(
 
                 Column(Modifier.padding(2.dp)) {
                     Text(
-                        text = news.name,
+                        text = category.name,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         maxLines = 3,
                         overflow = TextOverflow.Clip
                     )
                     Text(
-                        text = news.description.toString(),
+                        text = category.description.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                         fontSize = 16.sp,
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "id: ${news.id}",
+                        text = "id: ${category.id}",
                         style = MaterialTheme.typography.bodyMedium,
                         fontSize = 16.sp,
                         maxLines = 3,
@@ -158,11 +159,11 @@ fun CategoryCard(
 
 @Composable
 fun CategoryShowScreen(
+    categoryId: String?,
     onClickSeeAllAccounts: () -> Unit = {},
     onClickSeeAllBills: () -> Unit = {},
-    onAccountClick: (String) -> Unit = {},
+    onClick: (String) -> Unit = {},
 ) {
-
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -170,9 +171,6 @@ fun CategoryShowScreen(
             .verticalScroll(rememberScrollState())
             .semantics { contentDescription = "Overview Screen" }
     ) {
-
-
-        Text("Show category")
-
+        Text("Show category" + categoryId)
     }
 }

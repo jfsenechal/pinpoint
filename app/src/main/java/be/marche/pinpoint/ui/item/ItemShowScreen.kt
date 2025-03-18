@@ -14,9 +14,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ItemShowScreen(
+    idItem: String?,
     onClickSeeAllAccounts: () -> Unit = {},
     onClickSeeAllBills: () -> Unit = {},
-    onAccountClick: (String) -> Unit = {},
+    onClick: (String) -> Unit = {},
 ) {
 
     val context = LocalContext.current

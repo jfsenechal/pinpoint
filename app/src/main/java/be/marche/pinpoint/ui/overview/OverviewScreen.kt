@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 fun AccountsScreen(
     onClickSeeAllAccounts: () -> Unit = {},
     onClickSeeAllBills: () -> Unit = {},
-    onAccountClick: (String) -> Unit = {},
+    onClick: (String) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -41,7 +41,7 @@ fun SingleAccountScreen(
     accountType: String? = "jf"
 ) {
     val account = remember(accountType) { "admin" }
-    Text("Single Account screen")
+    Text("Single Account screen: " + accountType)
 }
 
 private val RallyDefaultPadding = 12.dp

@@ -30,7 +30,7 @@ private val RallyDefaultPadding = 12.dp
 fun SyncScreen(
     onClickSeeAllAccounts: () -> Unit = {},
     onClickSeeAllBills: () -> Unit = {},
-    onAccountClick: (String) -> Unit = {},
+    onClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val syncViewModel: SyncViewModel = koinViewModel()

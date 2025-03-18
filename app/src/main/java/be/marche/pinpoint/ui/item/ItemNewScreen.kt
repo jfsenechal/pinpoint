@@ -76,9 +76,10 @@ private val RallyDefaultPadding = 12.dp
 
 @Composable
 fun ItemNewScreen(
+    categoryId: String?,
     onClickSeeAllAccounts: () -> Unit = {},
     onClickSeeAllBills: () -> Unit = {},
-    onAccountClick: (String) -> Unit = {},
+    onClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -135,6 +136,7 @@ fun ItemNewScreen(
                 uiState.message,
                 modifier = modifier.fillMaxSize()
             )
+
             is MarsUiState.Success -> {
                 Toast.makeText(context, "item added", Toast.LENGTH_LONG).show()
             }
