@@ -46,6 +46,7 @@ private val RallyDefaultPadding = 12.dp
 
 @SuppressLint("MissingPermission")
 
+
 @Composable
 fun ItemListScreen(
     onClickSeeAllAccounts: () -> Unit = {},
@@ -53,7 +54,6 @@ fun ItemListScreen(
     onAccountClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-
     val itemViewModel: ItemViewModel = koinViewModel()
     val itemUiState = itemViewModel.itemUiState
     itemViewModel.loadItems()
@@ -65,14 +65,29 @@ fun ItemListScreen(
             itemUiState.message,
             modifier = modifier.fillMaxSize()
         )
-        is ItemUiState.Success -> ListContent(
-            itemUiState.items, {}, {}
-        )
+
+        is ItemUiState.Success -> {
+            ListContent(itemUiState.items, {}, {})
+        }
     }
 }
 
 @Composable
 fun ListContent(
+    items: List<Item>,
+    onAction: () -> Unit,
+    onArticleClick: (Int) -> Unit
+) {
+    Column() {
+        items.forEach { item ->
+            Text(text = "${item.id}")
+            Spacer(Modifier.height(RallyDefaultPadding))
+        }
+    }
+}
+
+@Composable
+fun ListContent22(
     itemList: List<Item>,
     onAction: () -> Unit,
     onArticleClick: (Int) -> Unit
@@ -169,7 +184,7 @@ fun ArticleItem(
                 .data(article.imageUrl)
                 .size(Size.ORIGINAL)
                 .build(),
-          //  model = article.imageUrl.toUri(),
+            //  model = article.imageUrl.toUri(),
             contentDescription = article.description,
             contentScale = ContentScale.Crop,
             modifier = Modifier
