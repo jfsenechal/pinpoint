@@ -58,7 +58,7 @@ fun CategoryListScreen(
     val marsUiState = marsViewModel.marsUiState
     val syncState = syncViewModel.syncUiState
     val categories = syncViewModel.categories
-    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -88,13 +88,12 @@ fun CategoryListScreen(
         when (syncState) {
             is MarsUiState.Pending -> {}
             is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-            is MarsUiState.Success -> ResultScreen(
-                syncState.message, modifier = modifier.fillMaxWidth()
-            )
-
             is MarsUiState.Error -> ErrorScreen(
                 syncState.message,
                 modifier = modifier.fillMaxSize()
+            )
+            is MarsUiState.Success -> ResultScreen(
+                syncState.message, modifier = modifier.fillMaxWidth()
             )
         }
 
