@@ -102,55 +102,7 @@ fun ItemNewScreen(
         ImageFromGalleryContent(fileUri = itemViewModel.fileUri)
 
         Spacer(Modifier.height(RallyDefaultPadding))
-        var descriptionInput by remember { mutableStateOf("") }
-        //FieldDescription(itemViewModel.description)
-        // Voice Recognition Launcher
-        val speechLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
-                val spokenText =
-                    data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()
-                spokenText?.let {
-                    descriptionInput = it
-                }
-            }
-        }
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(128.dp)
-                .padding(horizontal = 16.dp),
-            value = descriptionInput,
-            onValueChange = {
-
-            },
-            label = {
-                Text(text = "Description")
-            },
-            maxLines = 12,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done
-            ),
-            trailingIcon = {
-                IconButton(onClick = {
-                    val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                        putExtra(
-                            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                        )
-                        putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now")
-                    }
-                    speechLauncher.launch(intent)
-                }) {
-                    Icon(
-                        imageVector = androidx.compose.material.icons.Icons.Default.Mic,
-                        contentDescription = "Microphone"
-                    )
-                }
-            }
-        )
+        DescriptionFieldInput(itemViewModel.description)
 
         Spacer(Modifier.height(RallyDefaultPadding))
         IconButtonWithText(
@@ -228,9 +180,56 @@ private fun DisplayImage(fileUri: MutableState<Uri>) {
 }
 
 @Composable
-private fun FieldDescription(descriptionInput: MutableState<String>) {
+private fun DescriptionFieldInput(descriptionInput: MutableState<String>) {
+    val speechLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val spokenText =
+                data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()
+            spokenText?.let {
+                descriptionInput.value = it // ✅ Update parent state
+            }
+        }
+    }
 
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(128.dp)
+            .padding(horizontal = 16.dp),
+        value = descriptionInput.value, // ✅ Use parent state
+        onValueChange = { newValue ->
+            descriptionInput.value = newValue // ✅ Update parent state
+        },
+        label = {
+            Text(text = "Description")
+        },
+        maxLines = 12,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            imeAction = ImeAction.Done
+        ),
+        trailingIcon = {
+            IconButton(onClick = {
+                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                    putExtra(
+                        RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                    )
+                    putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now")
+                }
+                speechLauncher.launch(intent)
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Mic,
+                    contentDescription = "Microphone"
+                )
+            }
+        }
+    )
 }
+
 
 @Composable
 private fun BtnsStartTracker(context: Context) {
