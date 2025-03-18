@@ -8,7 +8,7 @@ import be.marche.pinpoint.entity.Item
 
 @Database(
     entities = [Item::class, Category::class, Comment::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

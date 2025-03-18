@@ -10,7 +10,7 @@ import retrofit2.http.GET
 import retrofit2.converter.gson.GsonConverterFactory
 
 private const val BASE_URL =
-    "https://cst.marche.be/"
+    "https://apptravaux.marche.be/"
 
 /**
  * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
@@ -25,9 +25,7 @@ private val retrofit = Retrofit.Builder()
  * Retrofit service object for creating api calls
  */
 interface ItemApiService {
-    @GET("photos")
-    suspend fun getPhotos404(): List<MarsPhoto>
-    @GET("api.php")
+    @GET("avaloirs/items/api/categories")
     suspend fun fetchCategories(): List<Category>
 }
 
