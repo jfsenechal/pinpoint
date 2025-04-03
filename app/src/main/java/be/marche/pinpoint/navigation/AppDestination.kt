@@ -101,5 +101,5 @@ object Permissions : AppDestination {
 }
 
 // Screens to be displayed in the top RallyTabRow
-val appTabRowScreens = listOf(HomePage, CategoryList, ItemNew, Sync, Permissions)
-val appIconsScreens = listOf(HomePage, Sync, ItemNew)
+val appTabRowScreens = listOf(HomePage, CategoryList, Sync, Permissions)
+val appIconsScreens = listOf(HomePage, CategoryList, Sync)
