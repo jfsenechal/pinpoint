@@ -50,6 +50,14 @@ object ItemList : AppDestination {
     override val icon = Icons.Rounded.Search
     override val name = "Liste des objets"
     override val route = "item_list"
+    const val categoryTypeArg = "category_id"
+    val routeWithArgs = "${route}/{$categoryTypeArg}"
+    val arguments = listOf(
+        navArgument(categoryTypeArg) { type = NavType.IntType }
+    )
+    val deepLinks = listOf(
+        navDeepLink { uriPattern = "rally://${route}/{$categoryTypeArg}" }
+    )
 }
 
 object ItemNew : AppDestination {
@@ -93,5 +101,5 @@ object Permissions : AppDestination {
 }
 
 // Screens to be displayed in the top RallyTabRow
-val appTabRowScreens = listOf(HomePage, CategoryList, ItemList, ItemNew, Sync, Permissions)
-val appIconsScreens = listOf(HomePage, ItemList, Sync, ItemNew)
+val appTabRowScreens = listOf(HomePage, CategoryList, ItemNew, Sync, Permissions)
+val appIconsScreens = listOf(HomePage, Sync, ItemNew)

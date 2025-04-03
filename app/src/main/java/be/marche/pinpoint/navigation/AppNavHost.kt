@@ -59,12 +59,16 @@ fun AppNavHost(
             })
         }
 
-        composable(route = ItemList.route) {
-            ItemListScreen(
-                onClick = { accountType ->
-                    navController.navigateToSingleAccount(ItemShow.route, accountType)
-                }
-            )
+        composable(
+            route = ItemList.routeWithArgs,
+            arguments = ItemList.arguments,
+            deepLinks = ItemList.deepLinks
+        ) { navBackStackEntry ->
+            val categoryId =
+                navBackStackEntry.arguments?.getInt(ItemList.categoryTypeArg)
+            CategoryShowScreen(categoryId, onClick = { accountType ->
+                navController.navigateToSingleAccount(ItemNew.route, accountType)
+            })
         }
 
         composable(

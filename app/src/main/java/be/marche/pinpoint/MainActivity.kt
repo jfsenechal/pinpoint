@@ -49,8 +49,8 @@ fun StartApp() {
         DrawScreen(
             allScreens = appTabRowScreens,
             iconsScreens = appIconsScreens,
-            onTabSelected = { newScreen ->
-                navController.navigateSingleTopTo(newScreen.route)
+            onTabSelected = { screen ->
+                navController.navigateSingleTopTo(screen.route)
             },
             currentScreen = currentScreen,
             navController = navController,
