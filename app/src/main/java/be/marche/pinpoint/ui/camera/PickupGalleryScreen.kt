@@ -1,4 +1,4 @@
-package be.marche.pinpoint.ui.screen
+package be.marche.pinpoint.ui.camera
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

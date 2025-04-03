@@ -22,6 +22,7 @@ import be.marche.pinpoint.sync.SyncViewModel
 import be.marche.pinpoint.ui.components.ErrorScreen
 import be.marche.pinpoint.ui.components.IconButtonWithText
 import be.marche.pinpoint.ui.components.LoadingScreen
+import be.marche.pinpoint.ui.components.TitleWithDivider
 import org.koin.androidx.compose.koinViewModel
 
 private val RallyDefaultPadding = 12.dp
@@ -41,7 +42,7 @@ fun SyncScreen(
             .verticalScroll(rememberScrollState())
             .semantics { contentDescription = "Overview Screen" }
     ) {
-        Text("Synchronisation")
+        TitleWithDivider("Synchronisation")
 
         when (syncState) {
             is MarsUiState.Pending -> {}

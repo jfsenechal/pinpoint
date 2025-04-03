@@ -49,16 +49,18 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import be.marche.pinpoint.category.CategoryViewModel
 import be.marche.pinpoint.data.MarsUiState
 import be.marche.pinpoint.geolocation.LocationManager
 import be.marche.pinpoint.geolocation.LocationService
 import be.marche.pinpoint.helper.copyImageToInternalStorage
 import be.marche.pinpoint.item.ItemViewModel
+import be.marche.pinpoint.ui.camera.ImageFromCameraContent
+import be.marche.pinpoint.ui.camera.ImageFromGalleryContent
 import be.marche.pinpoint.ui.components.ErrorScreen
 import be.marche.pinpoint.ui.components.IconButtonWithText
 import be.marche.pinpoint.ui.components.LoadingScreen
-import be.marche.pinpoint.ui.screen.ImageFromCameraContent
-import be.marche.pinpoint.ui.screen.ImageFromGalleryContent
+import be.marche.pinpoint.ui.components.TitleWithDivider
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.size.Size
@@ -76,15 +78,19 @@ private val RallyDefaultPadding = 12.dp
 
 @Composable
 fun ItemNewScreen(
+    modifier: Modifier = Modifier,
     categoryId: Int?,
     onClick: (Int) -> Unit = {},
-    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val itemViewModel: ItemViewModel = koinViewModel()
+    val categoryViewModel: CategoryViewModel = koinViewModel()
 
     val uiState = itemViewModel.uiState
     itemViewModel.categorySelected.value = categoryId
+
+    categoryViewModel.findCategoryById(categoryId!!)
+    val category = categoryViewModel.category
 
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
@@ -98,7 +104,9 @@ fun ItemNewScreen(
             .semantics { contentDescription = "Item new" },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Item new in category $categoryId")
+
+        TitleWithDivider("Nouvel objet dans ${category?.name}")
+
         Spacer(Modifier.height(RallyDefaultPadding))
         LocationContent(context, itemViewModel.location)
         Spacer(Modifier.height(RallyDefaultPadding))
@@ -150,7 +158,7 @@ private fun LocationContent(context: Context, location: MutableState<Location?>)
     val locationManager by lazy {
         LocationManager(context)
     }
-    Text("Géolocalisation")
+    Text("Ma géolocalisation")
     Spacer(Modifier.height(RallyDefaultPadding))
 
     var locationText by remember {

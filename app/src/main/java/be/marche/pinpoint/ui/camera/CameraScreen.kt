@@ -1,4 +1,4 @@
-package be.marche.pinpoint.ui.screen
+package be.marche.pinpoint.ui.camera
 
 import android.Manifest
 import android.content.Context

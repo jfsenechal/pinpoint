@@ -27,8 +27,8 @@ fun AppNavHost(
     ) {
         composable(route = HomePage.route) {
             HomePageScreen(
-                onClick = { accountType ->
-                    navController.navigateToSingleAccount(CategoryList.route, accountType)
+                onClick = {
+                    navController.navigateSingleTopTo(CategoryList.route)
                 }
             )
         }
@@ -38,9 +38,13 @@ fun AppNavHost(
         }
 
         composable(route = CategoryList.route) {
-            CategoryListScreen(onClick = { accountType ->
-                navController.navigateToSingleAccount(CategoryShow.route, accountType)
-            })
+            CategoryListScreen(
+                onClickAdd = { accountType ->
+                    navController.navigateToSingleAccount(ItemNew.route, accountType)
+                },
+                onClickShow = { accountType ->
+                    navController.navigateToSingleAccount(CategoryShow.route, accountType)
+                })
         }
 
         composable(
@@ -69,8 +73,10 @@ fun AppNavHost(
             deepLinks = ItemNew.deepLinks
         ) { navBackStackEntry ->
             val categoryId =
-                navBackStackEntry.arguments?.getInt(ItemNew.categoryTypeArg)
-            ItemNewScreen(categoryId, onClick = { accountType ->
+                navBackStackEntry.arguments?.getInt(CategoryShow.categoryTypeArg)
+            ItemNewScreen(
+                categoryId = categoryId,
+                onClick = { accountType ->
                 navController.navigateToSingleAccount(ItemNew.route, accountType)
             })
         }

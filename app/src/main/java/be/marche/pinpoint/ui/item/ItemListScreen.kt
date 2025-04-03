@@ -31,6 +31,7 @@ import be.marche.pinpoint.entity.Item
 import be.marche.pinpoint.item.ItemViewModel
 import be.marche.pinpoint.ui.components.ErrorScreen
 import be.marche.pinpoint.ui.components.LoadingScreen
+import be.marche.pinpoint.ui.components.TitleWithDivider
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.size.Size
@@ -52,7 +53,8 @@ fun ItemListScreen(
         itemViewModel.loadItems()
     }
 
-    Text("Liste items " + itemViewModel.items.size)
+    TitleWithDivider("Liste items " + itemViewModel.items.size)
+
     Spacer(Modifier.height(RallyDefaultPadding))
 
     when (itemUiState) {

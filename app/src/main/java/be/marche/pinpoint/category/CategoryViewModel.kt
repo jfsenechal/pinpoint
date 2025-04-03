@@ -24,6 +24,8 @@ open class CategoryViewModel(private val categoryDao: CategoryDao) : ViewModel()
 
     var categories: List<Category> by mutableStateOf(emptyList())
 
+    var category: Category? by mutableStateOf(null)
+
     fun loadCategories() {
         categoryUiState = CategoryUiState.Loading
         viewModelScope.launch {
@@ -34,6 +36,14 @@ open class CategoryViewModel(private val categoryDao: CategoryDao) : ViewModel()
                 CategoryUiState.Success(categories)
             } catch (e: Exception) {
                 CategoryUiState.Error(e.toString())
+            }
+        }
+    }
+
+    fun findCategoryById(categoryId: Int) {
+        viewModelScope.launch {
+            category = withContext(Dispatchers.IO) {
+                categoryDao.findCategoryById(categoryId)
             }
         }
     }

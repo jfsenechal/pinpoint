@@ -28,4 +28,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM Category")
     fun getAll(): List<Category>
+
+    @Query("SELECT * FROM Category WHERE id = :categoryId ")
+    fun findCategoryById(categoryId: Int): Category?
 }

@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import be.marche.pinpoint.ui.components.TitleWithDivider
 
 @Composable
 fun ItemShowScreen(
@@ -19,13 +20,15 @@ fun ItemShowScreen(
 ) {
 
     val context = LocalContext.current
+
+    TitleWithDivider("Item détails $idItem")
+
     Column(
         modifier = Modifier
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
             .semantics { contentDescription = "Overview Screen" }
     ) {
-        Text("item show")
         Text("category id $idItem" )
     }
 }
