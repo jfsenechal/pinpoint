@@ -69,6 +69,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.retrofit)
     implementation(libs.okhttp3)
+    implementation(libs.okhttp3.interceptor)
     implementation(libs.retrofit.converter.json)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.kotlinx.serialization.json)
