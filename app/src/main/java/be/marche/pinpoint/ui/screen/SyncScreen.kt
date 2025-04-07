@@ -12,13 +12,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import be.marche.pinpoint.data.MarsUiState
+import be.marche.pinpoint.network.ConnectivityViewModel
 import be.marche.pinpoint.sync.SyncViewModel
+import be.marche.pinpoint.ui.components.ConnectivityStatusScreen
 import be.marche.pinpoint.ui.components.ErrorScreen
 import be.marche.pinpoint.ui.components.IconButtonWithText
 import be.marche.pinpoint.ui.components.LoadingScreen
@@ -32,9 +36,14 @@ fun SyncScreen(
     onClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
+    val connectivityViewModel: ConnectivityViewModel = koinViewModel()
+    val isConnected by connectivityViewModel.isConnected.collectAsState()
+    val capabilities by connectivityViewModel.capabilities.collectAsState()
     val syncViewModel: SyncViewModel = koinViewModel()
     val syncState = syncViewModel.syncUiState
     val context = LocalContext.current
+    syncViewModel.loadItems()
+    val items = syncViewModel.items
 
     Column(
         modifier = Modifier
@@ -43,6 +52,11 @@ fun SyncScreen(
             .semantics { contentDescription = "Overview Screen" }
     ) {
         TitleWithDivider("Synchronisation")
+        Spacer(Modifier.height(RallyDefaultPadding))
+        ConnectivityStatusScreen(isConnected)
+        Spacer(Modifier.height(RallyDefaultPadding))
+
+        Text(text = "${items.count()} items en brouillons")
 
         when (syncState) {
             is MarsUiState.Pending -> {}
@@ -60,6 +74,7 @@ fun SyncScreen(
         Spacer(Modifier.height(RallyDefaultPadding))
         IconButtonWithText(
             text = "Synchroniser",
+            isEnabled = isConnected,
             icon = Icons.Rounded.Sync,
             onClick = {
                 syncViewModel.sync()

@@ -121,7 +121,7 @@ fun AppTabRow(
         ),
         scrollBehavior = scrollBehavior,
         title = {
-            Text(text = "Accueil")
+            Text(text = "PinPoint")
         },
         modifier = modifier,
         navigationIcon = {

@@ -25,4 +25,7 @@ interface ItemDao {
 
     @Query("SELECT * FROM Item")
     fun getAll(): List<Item>
+
+    @Query("SELECT * FROM Item WHERE idServer = 0")
+    fun getAllDrafts(): List<Item>
 }

@@ -1,6 +1,7 @@
 package be.marche.pinpoint.network
 
-import be.marche.pinpoint.data.MarsPhoto
+import be.marche.pinpoint.data.Coordinates
+import be.marche.pinpoint.data.DataResponse
 import be.marche.pinpoint.entity.Category
 //import kotlinx.serialization.json.Json
 import retrofit2.Retrofit
@@ -8,6 +9,10 @@ import retrofit2.http.GET
 //import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 //import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.converter.gson.GsonConverterFactory
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.http.*
 
 private const val BASE_URL =
     "https://apptravaux.marche.be/"
@@ -27,6 +32,14 @@ private val retrofit = Retrofit.Builder()
 interface ItemApiService {
     @GET("avaloirs/items/api/categories")
     suspend fun fetchCategories(): List<Category>
+
+    @Multipart
+    @POST("avaloirs/items/api/insert")
+    fun insertItemNotSuspend(
+        @Part("coordinates") coordinates: Coordinates,
+        @Part file: MultipartBody.Part,
+        @Part("image") requestBody: RequestBody
+    ): Call<DataResponse>
 }
 
 /**

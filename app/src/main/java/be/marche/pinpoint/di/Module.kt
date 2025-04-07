@@ -23,7 +23,7 @@ val appModule = module {
     single { ConnectivityManager(get()) }
 
     // Provide ViewModel
-    viewModel { SyncViewModel(get()) }
+    viewModel { SyncViewModel(get(), get()) }
     viewModel { ItemViewModel(get()) }
     viewModel { CategoryViewModel(get()) }
     viewModel { ConnectivityViewModel(get()) }

@@ -7,4 +7,5 @@
     <string name="dialog_title">Dialog title\n</string>
     <string name="dialog_text">Dialog text</string>
     <string name="confirm_btn">confirm btn</string>
+    <string name="no_internet_connection">Vous n\'êtes pas connecté à internet</string>
 </resources>

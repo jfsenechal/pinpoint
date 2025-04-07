@@ -53,11 +53,13 @@ import androidx.compose.ui.unit.sp
 fun IconButtonWithText(
     text: String,
     icon: ImageVector,
+    isEnabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(8.dp),
+        enabled = isEnabled
     ) {
         Icon(
             imageVector = icon,

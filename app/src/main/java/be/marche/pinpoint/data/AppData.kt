@@ -29,3 +29,20 @@ data class RemoteNewsResponse(
     val status: String,
     val totalResults: Int
 )
+
+data class DataResponse(
+    val error: Int,
+    val message: String,
+    val item: Item,
+)
+
+sealed class NotificationState {
+    class Success(val message: String) : NotificationState()
+    class Error(val message: String) : NotificationState()
+}
+
+data class Coordinates
+    (
+    val latitude: Double,
+    val longitude: Double
+)
