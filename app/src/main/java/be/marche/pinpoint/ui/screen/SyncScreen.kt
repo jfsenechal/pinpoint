@@ -1,5 +1,6 @@
 package be.marche.pinpoint.ui.screen
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -58,19 +59,6 @@ fun SyncScreen(
 
         Text(text = "${items.count()} items en brouillons")
 
-        when (syncState) {
-            is MarsUiState.Pending -> {}
-            is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-            is MarsUiState.Error -> ErrorScreen(
-                syncState.message,
-                modifier = modifier.fillMaxSize()
-            )
-
-            is MarsUiState.Success -> {
-                Toast.makeText(context, "Synchronisation ok", Toast.LENGTH_LONG).show()
-            }
-        }
-
         Spacer(Modifier.height(RallyDefaultPadding))
         IconButtonWithText(
             text = "Synchroniser",
@@ -79,5 +67,27 @@ fun SyncScreen(
             onClick = {
                 syncViewModel.sync()
             })
+
+        SyncStateScreen(modifier, context, syncState)
+    }
+}
+
+@Composable
+fun SyncStateScreen(
+    modifier: Modifier = Modifier,
+    context: Context,
+    syncState: MarsUiState,
+) {
+    when (syncState) {
+        is MarsUiState.Pending -> {}
+        is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+        is MarsUiState.Error -> ErrorScreen(
+            syncState.message,
+            modifier = modifier.fillMaxSize()
+        )
+
+        is MarsUiState.Success -> {
+            Toast.makeText(context, "Synchronisation ok", Toast.LENGTH_LONG).show()
+        }
     }
 }

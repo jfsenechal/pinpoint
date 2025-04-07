@@ -16,6 +16,7 @@ import be.marche.pinpoint.entity.Item
 import be.marche.pinpoint.helper.FileHelper
 import be.marche.pinpoint.network.ItemApi
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -80,30 +81,9 @@ class SyncViewModel(
         syncUiState = MarsUiState.Loading
         val fileHelper = FileHelper()
         items.forEach { item ->
-
-            Log.d("ZEZE", "item ${item.id}")
-            val imgFile: File?
-            try {
-                Log.d("ZEZE", "try uri file ${item.imageUrl}")
-                imgFile = File(item.imageUrl)
-            } catch (e: Exception) {
-                syncUiState = MarsUiState.Error("${e.message}")
-                Log.d("ZEZE", "item error file ${e.message}")
-                //  results.add(NotificationState.Error("${e.message}"))
-                return@forEach
-            }
-
-            val requestBody = fileHelper.createRequestBody(imgFile)
-            val part = fileHelper.createPart(imgFile, requestBody)
-            val coordinates = Coordinates(item.latitude, item.longitude)
-            val response =
-                ItemApi.retrofitService.insertItemNotSuspend(coordinates, part, requestBody)
-
-            Log.d("ZEZE", "item response finish ${response.toString()}")
-            syncUiState = MarsUiState.Success("Success: insert items")
+            treatment(item)
         }
         syncUiState = MarsUiState.Success("Success: insert items")
-
     }
 
     fun treatment(item: Item) {
@@ -116,13 +96,14 @@ class SyncViewModel(
 
         val file = File(item.imageUrl)
         val requestFile = file.asRequestBody("image/*".toMediaType())
-        val filePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        // imageUrl (or whatever string you need)
+        val filePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
         val imageUrlPart = item.imageUrl.toRequestBody("text/plain".toMediaType())
 
         val call = ItemApi.retrofitService.insertItemNotSuspend(
             coordinatesPart,
+            item.category_id,
+            item.description,
             filePart,
             imageUrlPart
         )
@@ -130,14 +111,23 @@ class SyncViewModel(
         call.enqueue(object : Callback<DataResponse> {
             override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
                 if (response.isSuccessful) {
-                    // Handle success
+                    response.body()?.item?.id?.let { serverId ->
+                        item.idServer = serverId
+                        CoroutineScope(Dispatchers.IO).launch {
+                            itemDao.update(item)
+                        }
+                    }
                 } else {
-                    // Handle error
+                    response.body()?.message?.let { message ->
+                        syncUiState = MarsUiState.Error("insert items $message")
+                    }
                 }
             }
 
             override fun onFailure(call: Call<DataResponse>, t: Throwable) {
-                // Handle failure
+                val errorMessage = t.localizedMessage ?: "Unknown error"
+                syncUiState = MarsUiState.Error("Insert items failed: $errorMessage")
+                syncUiState = MarsUiState.Error("insert items")
             }
         })
 

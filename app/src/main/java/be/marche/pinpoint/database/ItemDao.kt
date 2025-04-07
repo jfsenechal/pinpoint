@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(note: Item)
+    suspend fun insert(item: Item)
 
     @Update
-    suspend fun update(note: Item)
+    suspend fun update(item: Item)
 
     @Delete
-    suspend fun delete(note: Item)
+    suspend fun delete(item: Item)
 
     @Query("SELECT * FROM Item")
     fun getAllFlow(): Flow<List<Item>>

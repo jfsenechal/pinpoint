@@ -14,7 +14,7 @@ import androidx.room.ForeignKey
 data class Item(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val idServer: Int = 0,
+    var idServer: Int = 0,
     var latitude: Double,
     var longitude: Double,
     var imageUrl: String,
