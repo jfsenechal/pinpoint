@@ -1,11 +1,13 @@
 package be.marche.pinpoint.sync
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.marche.pinpoint.data.Coordinates
+import be.marche.pinpoint.data.DataResponse
 import be.marche.pinpoint.data.MarsUiState
 import be.marche.pinpoint.database.CategoryDao
 import be.marche.pinpoint.database.ItemDao
@@ -13,12 +15,19 @@ import be.marche.pinpoint.entity.Category
 import be.marche.pinpoint.entity.Item
 import be.marche.pinpoint.helper.FileHelper
 import be.marche.pinpoint.network.ItemApi
-import be.marche.pinpoint.network.ItemApiService
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.koin.android.annotation.KoinViewModel
+import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.HttpException
+import retrofit2.Response
 import java.io.File
 import java.io.IOException
 
@@ -67,15 +76,19 @@ class SyncViewModel(
 
     fun sync() {
 
+        Log.d("ZEZE", "start")
         syncUiState = MarsUiState.Loading
         val fileHelper = FileHelper()
         items.forEach { item ->
 
+            Log.d("ZEZE", "item ${item.id}")
             val imgFile: File?
             try {
+                Log.d("ZEZE", "try uri file ${item.imageUrl}")
                 imgFile = File(item.imageUrl)
             } catch (e: Exception) {
-                MarsUiState.Error("${e.message}")
+                syncUiState = MarsUiState.Error("${e.message}")
+                Log.d("ZEZE", "item error file ${e.message}")
                 //  results.add(NotificationState.Error("${e.message}"))
                 return@forEach
             }
@@ -83,9 +96,50 @@ class SyncViewModel(
             val requestBody = fileHelper.createRequestBody(imgFile)
             val part = fileHelper.createPart(imgFile, requestBody)
             val coordinates = Coordinates(item.latitude, item.longitude)
-            val response = ItemApi.retrofitService.insertItemNotSuspend(coordinates, part, requestBody)
+            val response =
+                ItemApi.retrofitService.insertItemNotSuspend(coordinates, part, requestBody)
+
+            Log.d("ZEZE", "item response finish ${response.toString()}")
+            syncUiState = MarsUiState.Success("Success: insert items")
         }
-        MarsUiState.Success("Success: insert items")
+        syncUiState = MarsUiState.Success("Success: insert items")
+
+    }
+
+    fun treatment(item: Item) {
+        val gson = Gson()
+
+        val coordinates = Coordinates(item.latitude, item.longitude)
+        val coordinatesJson = gson.toJson(coordinates)
+        val coordinatesPart =
+            coordinatesJson.toRequestBody("application/json; charset=utf-8".toMediaType())
+
+        val file = File(item.imageUrl)
+        val requestFile = file.asRequestBody("image/*".toMediaType())
+        val filePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+
+        // imageUrl (or whatever string you need)
+        val imageUrlPart = item.imageUrl.toRequestBody("text/plain".toMediaType())
+
+        val call = ItemApi.retrofitService.insertItemNotSuspend(
+            coordinatesPart,
+            filePart,
+            imageUrlPart
+        )
+
+        call.enqueue(object : Callback<DataResponse> {
+            override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
+                if (response.isSuccessful) {
+                    // Handle success
+                } else {
+                    // Handle error
+                }
+            }
+
+            override fun onFailure(call: Call<DataResponse>, t: Throwable) {
+                // Handle failure
+            }
+        })
 
     }
 }
